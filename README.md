@@ -27,6 +27,7 @@ for ^100 {
 
 logger.send-to("/var/log/hal.errors", :level(ERROR));
 error "I'm sorry Dave, I'm afraid I can't do that";
+```
 
 Description
 ===========
