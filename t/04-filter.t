@@ -2,7 +2,7 @@ use v6;
 use Test;
 use Log::Async;
 
-plan 7;
+plan 8;
 
 logger.close-taps;
 my $last = "my";
@@ -26,8 +26,10 @@ is $last, 'name', 'error message not sent to trace log';
 
 my $debug-or-error;
 my $severe;
+my $not-severe;
 logger.add-tap({ $debug-or-error ~= $^m<msg> }, level => (DEBUG | ERROR) );
-logger.add-tap({ $severe ~= $^m<msg> }, level => (* >= ERROR) );
+logger.add-tap({ $severe ~= $^m<msg> }, :level(* >= ERROR) );
+logger.add-tap({ $not-severe ~= $^m<msg> }, :level(TRACE..INFO) );
 info '1';
 trace '2';
 debug '3';
@@ -36,6 +38,7 @@ fatal '5';
 sleep 0.1;
 is $debug-or-error, "34", 'filter with junction';
 is $severe, '45', 'filter with whatever';
+is $not-severe, '123', 'not severe';
 
 my $cat;
 logger.add-tap({ $cat = $^m<msg> }, :msg(rx/cat/));

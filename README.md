@@ -40,20 +40,25 @@ only executed by one thread at a time.
 The default logger prints the level, timestamp, and
 message to stdout.
 
-Subroutines
-===========
-
-`logger` returns a logger singleton (a `Log::Async` instance)
-
-`set-logger` sets a new one.
-
-Methods
+Exports
 =======
 
-```
+Constants: TRACE DEBUG INFO WARNING ERROR FATAL
+These are enums (see examples below).
+
+Log::Async: A logger instance.
+logger: return or create a logger singleton.
+set-logger: set a new logger singleton.
+
+Log::Async Methods
+==========
+
 add-tap(Code,:$level,:$msgs)
+```
 logger.add-tap({ say $^m<msg> ~ '!!!!!' }, :level(FATAL));
 logger.add-tap({ $\*ERR.say $^m<msg> }, :level(DEBUG | ERROR));
+logger.add-tap({ say "not serious", :level(* < ERROR) });
+logger.add-tap({ say "maybe serious", :level(INFO..WARNING) });
 logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
 ```
 
@@ -62,18 +67,16 @@ The level argument is smartmatched against the level.  The message
 argument is smartmatched against the message.  The code in the
 tap receives a hash with `msg`, `level`, and `when` (a timestamp).
 
-```
 send-to(Str $filename)
+```
 send-to(IO::Handle $handle)
 logger.send-to('/tmp/out.log');
 ```
 Add a tap that prints timestamp, level and message to a file or filehandle.
 
-```
 close-taps;
+```
 logger.close-taps
 ```
 Close all the taps.
 
-These log levels are available as constants (for use in filters):
-`TRACE DEBUG INFO WARNING ERROR FATAL`.
