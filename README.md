@@ -1,6 +1,6 @@
 Log::Async
 ==========
-Asynchronous logging with a supplies and taps.
+Asynchronous logging using supplies and taps.
 
 [![Build Status](https://travis-ci.org/bduggan/p6-log-async.svg)](https://travis-ci.org/bduggan/p6-log-async)
 
