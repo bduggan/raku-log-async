@@ -25,15 +25,15 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
         @.taps.push: $supply.act($c);
     }
 
-    multi method send-to(IO::Handle $fh) {
+    multi method send-to(IO::Handle $fh, |args) {
         self.add-tap: -> $m {
-            $fh.say: "{ $m<when> } { $m<level>.lc }: { $m<msg> }";
-        }
+            $fh.say: "{ $m<when> } { $m<level>.lc }: { $m<msg> }",
+        }, |args
     }
 
-    multi method send-to(Str $path) {
+    multi method send-to(Str $path, |args) {
         my $fh = open($path,:a) or die "error opening $path";
-        self.send-to($fh);
+        self.send-to($fh, |args);
     }
 
     method log(:$msg, Loglevels :$level, :$when = DateTime.now) {
@@ -59,7 +59,7 @@ sub warning($msg) is export { logger.log( :$msg, :level(WARNING) ); }
 sub fatal($msg)   is export { logger.log( :$msg, :level(FATAL) ); }
 
 sub EXPORT {
-   set-logger(Log::Async.new) unless $logger;
+   set-logger(Log::Async.new) unless logger;
    return { }
 }
 
