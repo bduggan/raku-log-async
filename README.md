@@ -51,6 +51,10 @@ logger: return or create a logger singleton.
 
 set-logger: set a new logger singleton.
 
+trace, debug, info, warning, error, fatal: each of these
+takes a single argument: a log message.  The message is
+added to the supply of messages.
+
 Log::Async Methods
 ==========
 
