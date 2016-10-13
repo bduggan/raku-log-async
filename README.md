@@ -74,5 +74,4 @@ logger.close-taps
 Close all the taps.
 
 These log levels are available as constants (for use in filters):
-`TRACE DEBUG INFO WARNING ERROR FATAL`
-
+`TRACE DEBUG INFO WARNING ERROR FATAL`.
