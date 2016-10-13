@@ -43,11 +43,12 @@ message to stdout.
 Exports
 =======
 
-Constants: TRACE DEBUG INFO WARNING ERROR FATAL
-These are enums (see examples below).
+Constants (an enum): TRACE DEBUG INFO WARNING ERROR FATAL
 
 Log::Async: A logger instance.
+
 logger: return or create a logger singleton.
+
 set-logger: set a new logger singleton.
 
 Log::Async Methods
