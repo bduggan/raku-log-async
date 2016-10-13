@@ -54,7 +54,7 @@ Methods
 add-tap(Code,:$level,:$msgs)
 logger.add-tap({ say $^m<msg> ~ '!!!!!' }, :level(FATAL));
 logger.add-tap({ $\*ERR.say $^m<msg> }, :level(DEBUG | ERROR));
-logger.add-tap({ say "cat message: " ~ $^m<msg> }, :msg(rx/cat/));
+logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
 ```
 
 Add a tap, optionally filtering by the level or by the message.
