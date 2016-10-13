@@ -67,8 +67,7 @@ send-to(Str $filename)
 send-to(IO::Handle $handle)
 logger.send-to('/tmp/out.log');
 ```
-Add a tap that prints messages to a filehandle, or opens a file
-and sends message to that file.
+Add a tap that prints timestamp, level and message to a file or filehandle.
 
 ```
 close-taps;
