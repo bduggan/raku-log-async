@@ -59,8 +59,8 @@ logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
 
 Add a tap, optionally filtering by the level or by the message.
 The level argument is smartmatched against the level.  The message
-argument is smartmatched against the message.  The code receives
-a hash with `msg` and `level`.
+argument is smartmatched against the message.  The code in the
+tap receives a hash with `msg`, `level`, and `when` (a timestamp).
 
 ```
 send-to(Str $filename)
