@@ -32,7 +32,9 @@ Description
 ===========
 
 `Log::Async` provides asynchronous logging using
-the supply and tap semantics of Perl 6.
+the supply and tap semantics of Perl 6.  Log messages
+are emitted asynchronously to a supply.  Taps are
+only executed by one thread at a time.
 
 The default logger prints the level, timestamp, and
 message to stdout.

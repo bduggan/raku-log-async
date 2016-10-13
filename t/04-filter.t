@@ -9,15 +9,19 @@ my $last = "my";
 logger.add-tap({ $last = $^message<msg> }, :level(TRACE));
 
 trace "name";
+sleep 0.1;
 is $last, 'name', 'got trace message';
 
 debug 'is';
+sleep 0.1;
 is $last, 'name', 'debug message not sent to trace log';
 
 warning 'Inigo';
+sleep 0.1;
 is $last, 'name', 'warning message not sent to trace log';
 
 error 'Montoya';
+sleep 0.1;
 is $last, 'name', 'error message not sent to trace log';
 
 my $debug-or-error;
@@ -29,6 +33,7 @@ trace '2';
 debug '3';
 error '4';
 fatal '5';
+sleep 0.1;
 is $debug-or-error, "34", 'filter with junction';
 is $severe, '45', 'filter with whatever';
 
@@ -36,5 +41,6 @@ my $cat;
 logger.add-tap({ $cat = $^m<msg> }, :msg(rx/cat/));
 error 'cat alert';
 debug 'dog alog';
+sleep 0.1;
 is $cat, 'cat alert', 'filtered by msg';
 

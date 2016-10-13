@@ -20,7 +20,9 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
         my $supply = $!messages;
         $supply = $supply.grep( { $^m<level> ~~ $level }) with $level;
         $supply = $supply.grep( { $^m<msg> ~~ $msg }) with $msg;
-        @.taps.push: $supply.tap($c);
+        # @.taps.push: $supply.tap(-> $m { start $c($m) });
+        # @.taps.push: $supply.act(-> $m { start $c($m) });
+        @.taps.push: $supply.act($c);
     }
 
     multi method send-to(IO::Handle $fh) {
@@ -36,7 +38,8 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
 
     method log(:$msg, Loglevels :$level, :$when = DateTime.now) {
         my $m = { :$msg, :$level, :$when };
-        $.source.emit($m);
+        (start $.source.emit($m))
+          .then({ say $^p.cause unless $^p.status == Kept });
     }
 }
 
