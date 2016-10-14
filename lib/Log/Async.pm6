@@ -20,8 +20,6 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
         my $supply = $!messages;
         $supply = $supply.grep( { $^m<level> ~~ $level }) with $level;
         $supply = $supply.grep( { $^m<msg> ~~ $msg }) with $msg;
-        # @.taps.push: $supply.tap(-> $m { start $c($m) });
-        # @.taps.push: $supply.act(-> $m { start $c($m) });
         @.taps.push: $supply.act($c);
     }
 
