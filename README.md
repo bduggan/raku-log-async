@@ -92,3 +92,17 @@ logger.close-taps
 ```
 Close all the taps.
 
+More Examples
+========
+Close all taps and just send debug messages to stdout.
+```
+logger.close-taps;
+logger.send-to($*OUT,:level(DEBUG));
+```
+
+Close all taps and send warnings, errors, and fatals to a log file.
+```
+logger.close-taps;
+logger.send-to('/var/log/error.log',:level(* >= WARNING));
+```
+
