@@ -63,7 +63,7 @@ asynchronously emits a message at that level.
 Log::Async Methods
 ==========
 
-**add-tap(Code,:$level,:$msgs)**
+**add-tap(Code $code,:$level,:$msg)**
 ```
 logger.add-tap({ say $^m<msg> ~ '!!!!!' }, :level(FATAL));
 logger.add-tap({ $\*ERR.say $^m<msg> }, :level(DEBUG | ERROR));
@@ -73,9 +73,9 @@ logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
 ```
 
 Add a tap, optionally filtering by the level or by the message.
-The level argument is smartmatched against the level.  The message
-argument is smartmatched against the message.  The code in the
-tap receives a hash with `msg`, `level`, and `when` (a timestamp).
+`$code` receives a hash with the keys `msg`, `level`, and `when`
+(a timestamp).  `$level` and `$msg` are filters: they will be
+smartmatched against the level and msg keys respectively.
 
 **send-to(Str $filename, |args)**
 ```
