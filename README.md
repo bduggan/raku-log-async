@@ -43,8 +43,8 @@ the supply and tap semantics of Perl 6.  Log messages
 are emitted asynchronously to a supply.  Taps are
 only executed by one thread at a time.
 
-The default logger prints the level, timestamp, and
-message to stdout.
+By default a single tap is created which prints the timestamp,
+level and message to stdout.
 
 Exports
 =======
