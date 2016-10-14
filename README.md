@@ -49,22 +49,21 @@ message to stdout.
 Exports
 =======
 
-Constants (an enum): TRACE DEBUG INFO WARNING ERROR FATAL
+**trace, debug, info, warning, error, fatal**: each of these
+asynchronously emits a message at that level.
 
-Log::Async: A logger instance.
+**enum LogLevels**: TRACE DEBUG INFO WARNING ERROR FATAL
 
-logger: return or create a logger singleton.
+**class Log::Async**: Does the real work.
 
-set-logger: set a new logger singleton.
+**sub logger**: return or create a logger singleton.
 
-trace, debug, info, warning, error, fatal: each of these
-takes a single argument: a log message.  The message is
-added to the supply of messages.
+**sub set-logger**: set a new logger singleton.
 
 Log::Async Methods
 ==========
 
-*add-tap(Code,:$level,:$msgs)*
+**add-tap(Code,:$level,:$msgs)**
 ```
 logger.add-tap({ say $^m<msg> ~ '!!!!!' }, :level(FATAL));
 logger.add-tap({ $\*ERR.say $^m<msg> }, :level(DEBUG | ERROR));
@@ -78,14 +77,16 @@ The level argument is smartmatched against the level.  The message
 argument is smartmatched against the message.  The code in the
 tap receives a hash with `msg`, `level`, and `when` (a timestamp).
 
-*send-to(Str $filename)*
+**send-to(Str $filename, |args)**
 ```
 send-to(IO::Handle $handle)
 logger.send-to('/tmp/out.log');
 ```
 Add a tap that prints timestamp, level and message to a file or filehandle.
 
-*close-taps;*
+Additional args (filters) are sent to add-tap.
+
+**close-taps;**
 ```
 logger.close-taps
 ```
