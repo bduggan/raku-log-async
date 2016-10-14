@@ -1,6 +1,6 @@
 Log::Async
 ==========
-Asynchronous logging using supplies and taps.
+Thread-safe asynchronous logging using supplies.
 
 [![Build Status](https://travis-ci.org/bduggan/p6-log-async.svg)](https://travis-ci.org/bduggan/p6-log-async)
 
@@ -15,6 +15,12 @@ debug 'now';
 warning 'brown';
 info 'cow';
 fatal 'ow';
+
+(start debug 'one')
+  .then({ debug 'two' });
+(start debug 'buckle')
+  .then({ debug 'my shoe' });
+sleep 1;
 
 my $when = now + 1;
 
