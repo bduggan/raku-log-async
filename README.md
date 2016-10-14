@@ -86,7 +86,7 @@ Add a tap that prints timestamp, level and message to a file or filehandle.
 
 Additional args (filters) are sent to add-tap.
 
-**close-taps;**
+**close-taps**
 ```
 logger.close-taps
 ```
