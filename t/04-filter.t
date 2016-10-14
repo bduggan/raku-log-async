@@ -36,9 +36,9 @@ debug '3';
 error '4';
 fatal '5';
 sleep 0.1;
-is $debug-or-error, "34", 'filter with junction';
-is $severe, '45', 'filter with whatever';
-is $not-severe, '123', 'not severe';
+is $debug-or-error.comb.sort.join, "34", 'filter with junction';
+is $severe.comb.sort.join, '45', 'filter with whatever';
+is $not-severe.comb.sort.join, '123', 'not severe';
 
 my $cat;
 logger.add-tap({ $cat = $^m<msg> }, :msg(rx/cat/));

@@ -106,3 +106,9 @@ logger.close-taps;
 logger.send-to('/var/log/error.log',:level(* >= WARNING));
 ```
 
+Caveats
+=======
+Because messages are emitted asychronously, the order in which
+they are emitted depends on the scheduler.  Therefore timestamps
+in the log might not be in chronological order.
+
