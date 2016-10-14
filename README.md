@@ -69,13 +69,15 @@ logger.add-tap({ say $^m<msg> ~ '!!!!!' },  :level(FATAL));
 logger.add-tap({ $*ERR.say $^m<msg> },      :level(DEBUG | ERROR));
 logger.add-tap({ say "# $^m<msg>",          :level(* < ERROR) });
 logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
-logger.add-tap(-> $m { say "$m<when> ($<level>) $m<msg>", :level(INFO..WARNING) });
+logger.add-tap(-> $m { say "{ $m<when>.utc } ($<level>) $m<msg>",
+    :level(INFO..WARNING) });
 ```
 
 Add a tap, optionally filtering by the level or by the message.
-`$code` receives a hash with the keys `msg`, `level`, and `when`
-(a timestamp).  `$level` and `$msg` are filters: they will be
-smartmatched against the level and msg keys respectively.
+`$code` receives a hash with the keys `msg` (a string), `level` (a
+LogLevel), and `when` (a DateTime).  `$level` and `$msg` are
+filters: they will be smartmatched against the level and msg keys
+respectively.
 
 **send-to(Str $filename, |args)**
 ```
