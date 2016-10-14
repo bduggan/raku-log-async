@@ -66,7 +66,7 @@ Log::Async Methods
 **add-tap(Code $code,:$level,:$msg)**
 ```
 logger.add-tap({ say $^m<msg> ~ '!!!!!' },  :level(FATAL));
-logger.add-tap({ $\*ERR.say $^m<msg> },     :level(DEBUG | ERROR));
+logger.add-tap({ $*ERR.say $^m<msg> },     :level(DEBUG | ERROR));
 logger.add-tap({ say "not serious",         :level(* < ERROR) });
 logger.add-tap({ say "maybe serious",       :level(INFO..WARNING) });
 logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
