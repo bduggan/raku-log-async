@@ -7,7 +7,7 @@ Thread-safe asynchronous logging using supplies.
 Synopsis
 ========
 
-```
+```p6
 use Log::Async;
 
 trace 'how';
@@ -64,7 +64,7 @@ Log::Async Methods
 ==========
 
 **add-tap(Code $code,:$level,:$msg)**
-```
+```p6
 logger.add-tap({ say $^m<msg> ~ '!!!!!' },  :level(FATAL));
 logger.add-tap({ $*ERR.say $^m<msg> },      :level(DEBUG | ERROR));
 logger.add-tap({ say "# $^m<msg>",          :level(* < ERROR) });
@@ -80,7 +80,7 @@ filters: they will be smartmatched against the level and msg keys
 respectively.
 
 **send-to(Str $filename, |args)**
-```
+```p6
 send-to(IO::Handle $handle)
 logger.send-to('/tmp/out.log');
 ```
@@ -89,7 +89,7 @@ Add a tap that prints timestamp, level and message to a file or filehandle.
 Additional args (filters) are sent to add-tap.
 
 **close-taps**
-```
+```p6
 logger.close-taps
 ```
 Close all the taps.
@@ -97,13 +97,13 @@ Close all the taps.
 More Examples
 ========
 Close all taps and just send debug messages to stdout.
-```
+```p6
 logger.close-taps;
 logger.send-to($*OUT,:level(DEBUG));
 ```
 
 Close all taps and send warnings, errors, and fatals to a log file.
-```
+```p6
 logger.close-taps;
 logger.send-to('/var/log/error.log',:level(* >= WARNING));
 ```
