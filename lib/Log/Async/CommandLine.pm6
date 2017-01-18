@@ -1,7 +1,6 @@
-unit module Log::CommandLine;
+unit module Log::Async::CommandLine;
 
 use Log::Async;
-use Terminal::ANSIColor;
 
 sub parse-log-args
 {
@@ -9,7 +8,11 @@ sub parse-log-args
 
     my $loglevel = WARNING;
     my $logfh = $*OUT;
-    my $color = False;
+
+    my &print-log = sub ($logfh, $m)
+    {
+	$logfh.say("$m<when> $m<level>.lc(): $m<msg>");
+    };
 
     for @*ARGS
     {
@@ -23,7 +26,23 @@ sub parse-log-args
         }
         when '--logcolor'
         {
-            $color = True;
+	    use Terminal::ANSIColor;
+
+	    &print-log = sub ($logfh, $m)
+	    {
+		state %colors = 
+		    TRACE   => 'bold magenta',
+		    DEBUG   => 'bold blue',
+		    INFO    => 'bold green',
+		    WARNING => 'bold yellow',
+		    ERROR   => 'bold red',
+		    FATAL   => 'bold red';
+
+		$logfh.say($m<when> ~ ' ' ~
+                           color(%colors{$m<level>}) ~ $m<level>.lc ~
+                           (color('reset') unless $m<level> ~~ ERROR|FATAL) ~
+                           ': ' ~ $m<msg> ~ color('reset'));
+	    };
         }
         default
         {
@@ -32,26 +51,7 @@ sub parse-log-args
     }
 
     logger.close-taps;
-    logger.add-tap(($color ?? -> $m
-                   {
-                       state %colors = 
-                           TRACE   => 'bold magenta',
-                           DEBUG   => 'bold blue',
-                           INFO    => 'bold green',
-                           WARNING => 'bold yellow',
-                           ERROR   => 'bold red',
-                           FATAL   => 'bold red';
-
-                       $logfh.say($m<when> ~ ' ' ~
-                           color(%colors{$m<level>}) ~ $m<level>.lc ~
-                           (color('reset') unless $m<level> ~~ ERROR|FATAL) ~
-                           ': ' ~ $m<msg> ~ color('reset'));
-                   }
-                   !! -> $m
-                   {
-                       $logfh.say("$m<when> $m<level>.lc(): $m<msg>");
-                   }),
-                   :level(* >= $loglevel));
+    logger.add-tap(-> $m { &print-log($logfh, $m) }, :level(* >= $loglevel));
 
     @*ARGS = @keepargs;
 }
