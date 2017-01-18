@@ -65,11 +65,11 @@ INIT
 
 =head1 NAME
 
-Log::CommandLine
+Log::Async::CommandLine
 
 =head1 SYNOPSIS
 
-use Log::CommandLine;
+use Log::Async::CommandLine;
 
     ./someprogram [--trace]
                   [--debug]
