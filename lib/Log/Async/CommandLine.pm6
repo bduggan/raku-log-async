@@ -45,12 +45,9 @@ sub parse-log-args
 		    ERROR   => "\e[31;1m", # red
 		    FATAL   => "\e[31;1m"; # red
 
-                state $reset = "\e[0m";
-
-		$logfh.say($m<when> ~ ' ' ~
-                           %colors{$m<level>} ~ $m<level>.lc ~
+		$logfh.say("$m<when> %colors{$m<level>} $m<level>.lc()" ~
                            ("\e[0m" unless $m<level> ~~ ERROR|FATAL) ~
-                           ': ' ~ $m<msg> ~ "\e[0m");
+                           ": $m<msg>\e[0m");
 	    };
         }
         default
