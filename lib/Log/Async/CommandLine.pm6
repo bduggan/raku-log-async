@@ -8,6 +8,7 @@ sub parse-log-args
 
     my $loglevel = WARNING;
     my $logfh = $*OUT;
+    my $silent;
 
     my &print-log = sub ($logfh, $m)
     {
@@ -16,6 +17,14 @@ sub parse-log-args
 
     for @*ARGS
     {
+	when '--silent'|'-q'
+	{
+	    $silent = True;
+	}
+	when '-v'
+	{
+	    $loglevel = INFO;
+	}
         when /^'--'(trace|debug|info|warning|error|fatal)$/
         {
             $loglevel = Loglevels::{$0.uc};
@@ -51,7 +60,8 @@ sub parse-log-args
     }
 
     logger.close-taps;
-    logger.add-tap(-> $m { &print-log($logfh, $m) }, :level(* >= $loglevel));
+    logger.add-tap(-> $m { &print-log($logfh, $m) }, :level(* >= $loglevel))
+	unless $silent;
 
     @*ARGS = @keepargs;
 }
@@ -73,10 +83,11 @@ use Log::Async::CommandLine;
 
     ./someprogram [--trace]
                   [--debug]
-                  [--info]
+                  [--info | -v]
                   [--warning]  # Default
                   [--error]
                   [--fatal]
+                  [--silent | -q]
 
     ./someprogram [--logcolor] # Colorize log output
 
