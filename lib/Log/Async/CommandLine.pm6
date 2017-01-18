@@ -35,22 +35,22 @@ sub parse-log-args
         }
         when '--logcolor'
         {
-	    use Terminal::ANSIColor;
-
 	    &print-log = sub ($logfh, $m)
 	    {
 		state %colors = 
-		    TRACE   => 'bold magenta',
-		    DEBUG   => 'bold blue',
-		    INFO    => 'bold green',
-		    WARNING => 'bold yellow',
-		    ERROR   => 'bold red',
-		    FATAL   => 'bold red';
+		    TRACE   => "\e[35;1m", # magenta
+		    DEBUG   => "\e[34;1m", # blue
+		    INFO    => "\e[32;1m", # green
+		    WARNING => "\e[33;1m", # yellow
+		    ERROR   => "\e[31;1m", # red
+		    FATAL   => "\e[31;1m"; # red
+
+                state $reset = "\e[0m";
 
 		$logfh.say($m<when> ~ ' ' ~
-                           color(%colors{$m<level>}) ~ $m<level>.lc ~
-                           (color('reset') unless $m<level> ~~ ERROR|FATAL) ~
-                           ': ' ~ $m<msg> ~ color('reset'));
+                           %colors{$m<level>} ~ $m<level>.lc ~
+                           ("\e[0m" unless $m<level> ~~ ERROR|FATAL) ~
+                           ': ' ~ $m<msg> ~ "\e[0m");
 	    };
         }
         default
