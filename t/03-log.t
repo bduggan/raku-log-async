@@ -5,12 +5,7 @@ use Log::Async;
 plan 12;
 
 my $out;
-class Mock is IO::Handle {
-  method say($str) {
-     $out ~= $str;
-  }
-}
-$*OUT = Mock.new;
+$*OUT = IO::Handle but role { method say($arg) { $out ~= $arg } };
 
 set-logger(Log::Async.new);
 
