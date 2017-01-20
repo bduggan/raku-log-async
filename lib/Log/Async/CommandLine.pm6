@@ -2,16 +2,15 @@ unit module Log::Async::CommandLine;
 
 use Log::Async;
 
+
 sub parse-log-args {
     my @keepargs;
 
     my $loglevel = WARNING;
     my $logfh = $*OUT;
     my $silent;
-
-    my &print-log = sub ($logfh, $m) {
-        $logfh.say("$m<when> $m<level>.lc(): $m<msg>");
-    };
+    my $color;
+    my $threadid;
 
     for @*ARGS {
         when '--silent'|'-q' {
@@ -27,27 +26,41 @@ sub parse-log-args {
             $logfh = open($0.Str, :a);
         }
         when '--logcolor' {
-            &print-log = sub ($logfh, $m) {
-                state %colors =
-                    TRACE   => "\e[35;1m", # magenta
-                    DEBUG   => "\e[34;1m", # blue
-                    INFO    => "\e[32;1m", # green
-                    WARNING => "\e[33;1m", # yellow
-                    ERROR   => "\e[31;1m", # red
-                    FATAL   => "\e[31;1m"; # red
-
-                $logfh.say("$m<when> %colors{$m<level>} $m<level>.lc()" ~
-                           ("\e[0m" unless $m<level> ~~ ERROR|FATAL) ~
-                           ": $m<msg>\e[0m");
-            };
+            $color = True;
+        }
+        when '--logthreadid' {
+            $threadid = True;
         }
         default {
             push @keepargs, $_;
         }
     }
 
+    my &print-log = $color
+      ?? sub ($logfh, $m, $threadid) {
+             state %colors =
+                 TRACE   => "\e[35;1m", # magenta
+                 DEBUG   => "\e[34;1m", # blue
+                 INFO    => "\e[32;1m", # green
+                 WARNING => "\e[33;1m", # yellow
+                 ERROR   => "\e[31;1m", # red
+                 FATAL   => "\e[31;1m"; # red
+
+             $logfh.say("$m<when> " ~
+                         ("($m<THREAD>.id()) " if $threadid) ~
+                         "%colors{$m<level>}$m<level>.lc()" ~
+                         ("\e[0m" unless $m<level> ~~ ERROR|FATAL) ~
+                         ": $m<msg>\e[0m");
+         }
+      !! sub ($logfh, $m, $threadid) {
+             $logfh.say("$m<when> " ~
+                        ("($m<THREAD>.id()) " if $threadid) ~
+                        "$m<level>.lc(): $m<msg>");
+         };
+
     logger.close-taps;
-    logger.add-tap(-> $m { &print-log($logfh, $m) }, :level(* >= $loglevel))
+    logger.add-tap(-> $m { &print-log($logfh, $m, $threadid) },
+                   :level(* >= $loglevel))
         unless $silent;
 
     @*ARGS = @keepargs;
