@@ -78,7 +78,7 @@ Log::Async::CommandLine
 
 =head1 SYNOPSIS
 
-use Log::Async::CommandLine;
+    use Log::Async::CommandLine;
 
     ./someprogram [--trace]
                   [--debug]
@@ -89,6 +89,8 @@ use Log::Async::CommandLine;
                   [--silent | -q]
 
     ./someprogram [--logcolor] # Colorize log output
+
+    ./someprogram [--logthreadid] # Include thread id in log msg
 
     ./someprogram [--logfile=/var/log/mylogfile]
 
@@ -101,5 +103,7 @@ It will log either to $*OUT or the specified logfile messages with a
 level >= the specified level (or warning by default).
 
 Adding the '--logcolor' option will colorize the log output a little.
+
+Adding '--logthreadid' will include the thread id in the logged message.
 
 =end pod
