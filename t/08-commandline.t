@@ -2,44 +2,22 @@ use v6;
 use Test;
 
 my @testcases =
-# args, keepargs,
-# trace, debug, info,  warning, error, fatal, color
-[], [],
-  False, False, False, True,    True,  True,  False,
+    # args, keepargs, trace, debug, info, warning, error, fatal, color
+    [], [],            False, False, False, True,  True,  True,  False,
+    [<--trace>],   [], True,  True,  True,  True,  True,  True,  False,
+    [<--debug>],   [], False, True,  True,  True,  True,  True,  False,
+    [<--info>],    [], False, False, True,  True,  True,  True,  False,
+    [<-v>],        [], False, False, True,  True,  True,  True,  False,
+    [<--warning>], [], False, False, False, True,  True,  True,  False,
+    [<--error>],   [], False, False, False, False, True,  True,  False,
+    [<--fatal>],   [], False, False, False, False, False, True,  False,
+    [<-q>],        [], False, False, False, False, False, False, False,
+    [<--silent>],  [], False, False, False, False, False, False, False,
+    [<--logcolor>],[], False, False, False, True, True,   True,  True,
 
-[<--trace>], [],
-  True,  True,  True,  True,    True,  True,  False,
-
-[<--debug>], [],
-  False, True,  True,  True,    True,  True,  False,
-
-[<--info>], [],
-  False, False, True,  True,    True,  True,  False,
-
-[<-v>], [],
-  False, False, True,  True,    True,  True,  False,
-
-[<--warning>], [],
-  False, False, False, True,    True,  True,  False,
-
-[<--error>], [],
-  False, False, False, False,   True,  True,  False,
-
-[<--fatal>], [],
-  False, False, False, False,   False, True,  False,
-
-[<-q>], [],
-  False, False, False, False,   False, False, False,
-
-[<--silent>], [],
-  False, False, False, False,   False, False, False,
-
-# Don't mess with arguments that aren't mine
-[<foo -q bar mine --this --that>], [<foo bar mine --this --that>],
-  False, False, False, False,   False, False, False,
-
-[<--logcolor>], [],
-  False, False, False, True,    True,  True,  True,
+    # Don't mess with arguments that aren't mine
+    [<foo -q bar mine --this --that>], [<foo bar mine --this --that>],
+                       False, False, False, False, False, False, False,
 ;
 
 plan @testcases.elems / 9;
