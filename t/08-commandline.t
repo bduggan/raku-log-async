@@ -26,7 +26,6 @@ for @testcases -> @args, @keepargs,
                   $trace, $debug, $info, $warning, $error, $fatal, $color {
     subtest @args.Str, {
         plan 8;
-        diag @args;
 
         my $lib = $*PROGRAM.parent.parent.child('lib');
         my $perl6 = ~$*EXECUTABLE;
