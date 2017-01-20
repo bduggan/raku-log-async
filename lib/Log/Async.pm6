@@ -5,6 +5,14 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
     has Tap @.taps;
     has Supply $.messages;
 
+    my $instance;
+    method instance {
+        return $instance;
+    }
+    method set-instance($i) {
+        $instance = $i;
+    }
+
     method new {
         my $self = callsame;
         $self.send-to($*OUT);
@@ -25,7 +33,7 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
 
     multi method send-to(IO::Handle $fh, |args) {
         self.add-tap: -> $m {
-            $fh.say: "{ $m<when> } { $m<level>.lc }: { $m<msg> }",
+            $fh.say: "{ $m<when> } ({$m<THREAD>.id}) { $m<level>.lc }: { $m<msg> }",
         }, |args
     }
 
@@ -35,18 +43,22 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
     }
 
     method log(:$msg, Loglevels :$level, :$when = DateTime.now) {
-        my $m = { :$msg, :$level, :$when };
+        my $m = { :$msg, :$level, :$when, :$*THREAD };
         (start $.source.emit($m))
           .then({ say $^p.cause unless $^p.status == Kept });
     }
+
+    method done() {
+        start { sleep 0.1; $.source.done };
+        $.source.Supply.wait;
+    }
 }
 
-my $logger;
 sub set-logger($new) is export {
-    $logger = $new;
+    Log::Async.set-instance($new);
 }
 sub logger is export {
-    $logger;
+    Log::Async.instance;
 }
 
 sub trace($msg)   is export { logger.log( :$msg, :level(TRACE) ); }
@@ -61,4 +73,6 @@ sub EXPORT {
    return { }
 }
 
-
+END {
+    Log::Async.instance.done;
+}
