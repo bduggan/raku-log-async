@@ -4,7 +4,7 @@ use Test;
 my @testcases =
 # args, keepargs,
 # trace, debug, info,  warning, error, fatal, color
-[], [], 
+[], [],
   False, False, False, True,    True,  True,  False,
 
 [<--trace>], [],
@@ -45,81 +45,60 @@ my @testcases =
 plan @testcases.elems / 9;
 
 for @testcases -> @args, @keepargs,
-                  $trace, $debug, $info, $warning, $error, $fatal, $color
-{
-    subtest @args.Str,
-    {
+                  $trace, $debug, $info, $warning, $error, $fatal, $color {
+    subtest @args.Str, {
         plan 8;
         diag @args;
 
-        my $out = run('perl6', 't/command-line-test.pl',
+        my $lib = $*PROGRAM.parent.parent.child('lib');
+        my $perl6 = ~$*EXECUTABLE;
+
+        my $out = run($perl6,"-I$lib", 't/command-line-test.pl',
                       |@args, :out).out.slurp-rest;
 
-        like $out, (@keepargs.elems 
+        like $out, (@keepargs.elems
                     ?? /ARGS: {@keepargs.join(',')}/
                     !! /ARGS: /), 'Right ARGS';
 
-        if $trace
-        {
+        if $trace {
             like $out, /trace/, 'TRACE logged';
-        }
-        else
-        {
+        } else {
             unlike $out, /trace/, 'TRACE not logged';
         }
 
-        if $debug
-        {
+        if $debug {
             like $out, /debug/, 'DEBUG logged';
-        }
-        else
-        {
+        } else {
             unlike $out, /debug/, 'DEBUG not logged';
         }
 
-        if $info
-        {
+        if $info {
             like $out, /info/, 'INFO logged';
-        }
-        else
-        {
+        } else {
             unlike $out, /info/, 'INFO not logged';
         }
 
-        if $warning
-        {
+        if $warning {
             like $out, /warning/, 'WARNING logged';
-        }
-        else
-        {
+        } else {
             unlike $out, /warning/, 'WARNING not logged';
         }
 
-        if $error
-        {
+        if $error {
             like $out, /error/, 'ERROR logged';
-        }
-        else
-        {
+        } else {
             unlike $out, /error/, 'ERROR not logged';
         }
 
-        if $fatal
-        {
+        if $fatal {
             like $out, /fatal/, 'FATAL logged';
-        }
-        else
-        {
+        } else {
             unlike $out, /fatal/, 'FATAL not logged';
         }
 
-        if $color && $fatal
-        {
-
+        if $color && $fatal {
             like $out, /\e\[\d\d\;1m/, 'Colorized';
-        }
-        else
-        {
+        } else {
             unlike $out, /\e\[\d\d\;1m/, 'Not Colorized';
         }
     }
