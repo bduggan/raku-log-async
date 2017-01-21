@@ -86,9 +86,13 @@ sub parse-log-args {
          };
 
     logger.close-taps;
-    logger.add-tap(-> $m { &print-log($logfh, $m, $threadid, set(@logwhere),
-                                      $loglevel, %modulefilters) })
-        unless $silent;
+
+    unless $silent
+    {
+        logger.where = True;
+        logger.add-tap(-> $m { &print-log($logfh, $m, $threadid, set(@logwhere),
+                                          $loglevel, %modulefilters) })
+    }
 
     @*ARGS = @keepargs;
 }

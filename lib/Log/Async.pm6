@@ -9,8 +9,9 @@ sub search-callframe ( $type --> CallFrame ) {
   # 0  search-callframe(method)
   # 1  log(method)
   # 2  *-message(sub) helper functions
+  # 3  if where
   #
-  my $fn = 3;
+  my $fn = 4;
   while my CallFrame $cf = callframe($fn++) {
     # End loop with the program that starts on line 1 and code object is
     # a hollow shell.
@@ -36,6 +37,7 @@ sub search-callframe ( $type --> CallFrame ) {
 }
 
 class Log::Async:ver<0.0.1>:auth<github:bduggan> {
+    has Bool $.where is rw;
     has $.source = Supplier.new;
     has Tap @.taps;
     has Supply $.messages;
@@ -78,28 +80,33 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
     }
 
     method log(:$msg, Loglevels :$level, :$when = DateTime.now) {
-        my Str $method = '';
-        my Int $line = 0;           # Line number where Message is called
-        my Str $file = '';          # File in which that happened
-        my Str $module = '';
+        my $m = { :$msg, :$level, :$when, :$*THREAD };
 
-        my CallFrame $cf = search-callframe(Method)    //
-                           search-callframe(Submethod) //
-                           search-callframe(Sub)       //
-                           search-callframe(Block);
+        if $!where
+        {
+            my Str $method = '';
+            my Int $line = 0;           # Line number where Message is called
+            my Str $file = '';          # File in which that happened
+            my Str $module = '';
 
-        with $cf {
-            $line = .line.Int // 1;
-            $file = .file // '';
-            $file ~~ s/$*CWD/\./;
-            $method = .code.name // '';
-            $method = '' if $method ~~ '<unit>';
-            $file ~~ /(<-[/(\s]>+)? \s* [\((.+)\)]?$/;
-            $module = (~$1 if $1) || (~$0 if $0) || '';
+            my CallFrame $cf = search-callframe(Method)    //
+                               search-callframe(Submethod) //
+                               search-callframe(Sub)       //
+                               search-callframe(Block);
+
+            with $cf {
+                $line = .line.Int // 1;
+                $file = .file // '';
+                $file ~~ s/$*CWD/\./;
+                $method = .code.name // '';
+                $method = '' if $method ~~ '<unit>';
+                $file ~~ /(<-[/(\s]>+)? \s* [\((.+)\)]?$/;
+                $module = (~$1 if $1) || (~$0 if $0) || '';
+            }
+
+            $m<where> = {:$file, :$line, :$method, :$module};
         }
 
-        my $m = { :$msg, :$level, :$when, :$*THREAD,
-                  :where({:$file, :$line, :$method, :$module}) };
         (start $.source.emit($m))
           .then({ say $^p.cause unless $^p.status == Kept });
     }
