@@ -1,7 +1,5 @@
 use v6;
 
-use lib 't';
-
 use Log::Async;
 use Log::Async::CommandLine;
 use TestModule;
