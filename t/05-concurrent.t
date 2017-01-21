@@ -23,7 +23,7 @@ for ^100 {
          ;
 }
 
-sleep 2;
+sleep 3;
 
 is +@messages, 400, 'four hundred messages';
 is $string.chars, 4000, '4000 characters';

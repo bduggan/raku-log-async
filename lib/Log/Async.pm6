@@ -1,5 +1,40 @@
 enum Loglevels <<:TRACE(1) DEBUG INFO WARNING ERROR FATAL>>;
 
+#-------------------------------------------------------------------------------
+# From MARTIMM https://github.com/bduggan/p6-log-async/issues/4
+# preparations of code to be provided to log()
+sub search-callframe ( $type --> CallFrame ) {
+
+  # Skip callframes for
+  # 0  search-callframe(method)
+  # 1  log(method)
+  # 2  *-message(sub) helper functions
+  #
+  my $fn = 3;
+  while my CallFrame $cf = callframe($fn++) {
+    # End loop with the program that starts on line 1 and code object is
+    # a hollow shell.
+    if ?$cf and $cf.line == 1  and $cf.code ~~ Mu {
+
+      $cf = Nil;
+      last;
+    }
+
+    # Cannot pass sub THREAD-ENTRY either
+    if ?$cf and $cf.code.^can('name') and $cf.code.name eq 'THREAD-ENTRY' {
+
+      $cf = Nil;
+      last;
+    }
+
+    # Try to find a better place instead of dispatch, BUILDALL etc:...
+    next if $cf.code ~~ $type and $cf.code.name ~~ m/dispatch/;
+    last if $cf.code ~~ $type;
+  }
+
+  return $cf;
+}
+
 class Log::Async:ver<0.0.1>:auth<github:bduggan> {
     has $.source = Supplier.new;
     has Tap @.taps;
@@ -43,7 +78,28 @@ class Log::Async:ver<0.0.1>:auth<github:bduggan> {
     }
 
     method log(:$msg, Loglevels :$level, :$when = DateTime.now) {
-        my $m = { :$msg, :$level, :$when, :$*THREAD };
+        my Str $method = '';
+        my Int $line = 0;           # Line number where Message is called
+        my Str $file = '';          # File in which that happened
+        my Str $module = '';
+
+        my CallFrame $cf = search-callframe(Method)    //
+                           search-callframe(Submethod) //
+                           search-callframe(Sub)       //
+                           search-callframe(Block);
+
+        with $cf {
+            $line = .line.Int // 1;
+            $file = .file // '';
+            $file ~~ s/$*CWD/\./;
+            $method = .code.name // '';
+            $method = '' if $method ~~ '<unit>';
+            $file ~~ /(<-[/(\s]>+)? \s* [\((.+)\)]?$/;
+            $module = (~$1 if $1) || (~$0 if $0) || '';
+        }
+
+        my $m = { :$msg, :$level, :$when, :$*THREAD,
+                  :where({:$file, :$line, :$method, :$module}) };
         (start $.source.emit($m))
           .then({ say $^p.cause unless $^p.status == Kept });
     }

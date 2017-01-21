@@ -1,7 +1,10 @@
 use v6;
 
+use lib 't';
+
 use Log::Async;
 use Log::Async::CommandLine;
+use TestModule;
 
 trace   'log trace';
 debug   'log debug';
@@ -11,3 +14,9 @@ error   'log error';
 fatal   'log fatal';
 
 say "ARGS: {@*ARGS.join(',')}";
+
+if '--testsubs' ∈ @*ARGS
+{
+    sub_a;
+    sub_b;
+}
