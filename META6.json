@@ -4,7 +4,8 @@
     "perl" : "6.c",
     "build-depends" : [ ],
     "provides" : {
-        "Log::Async" : "lib/Log/Async.pm6"
+        "Log::Async" : "lib/Log/Async.pm6",
+        "Log::Async::CommandLine" : "lib/Log/Async/CommandLine.pm6"
     },
     "depends" : [
     ],
