@@ -4,7 +4,7 @@ use Test;
 plan 21;
 
 my $lib = $*PROGRAM.parent.parent.child('lib');
-my $t = $*PROGRAM.parent.parent.child('t');
+my $t = $*PROGRAM.parent;
 my $perl6 = ~$*EXECUTABLE;
 
 sub run-test(*@args) {
