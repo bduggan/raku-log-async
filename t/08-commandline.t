@@ -2,30 +2,34 @@ use v6;
 use Test;
 
 my @testcases =
-    # args, keepargs, trace, debug, info, warning, error, fatal, color
-    [], [],            False, False, False, True,  True,  True,  False,
-    [<--trace>],   [], True,  True,  True,  True,  True,  True,  False,
-    [<--debug>],   [], False, True,  True,  True,  True,  True,  False,
-    [<--info>],    [], False, False, True,  True,  True,  True,  False,
-    [<-v>],        [], False, False, True,  True,  True,  True,  False,
-    [<--warning>], [], False, False, False, True,  True,  True,  False,
-    [<--error>],   [], False, False, False, False, True,  True,  False,
-    [<--fatal>],   [], False, False, False, False, False, True,  False,
-    [<-q>],        [], False, False, False, False, False, False, False,
-    [<--silent>],  [], False, False, False, False, False, False, False,
-    [<--logcolor>],[], False, False, False, True, True,   True,  True,
+    # args, keepargs, trace, debug, info, warning, error, fatal, color, thread
+    [], [],            False, False, False, True,  True,  True,  False, False,
+    [<--trace>],   [], True,  True,  True,  True,  True,  True,  False, False,
+    [<--debug>],   [], False, True,  True,  True,  True,  True,  False, False,
+    [<--info>],    [], False, False, True,  True,  True,  True,  False, False,
+    [<-v>],        [], False, False, True,  True,  True,  True,  False, False,
+    [<--warning>], [], False, False, False, True,  True,  True,  False, False,
+    [<--error>],   [], False, False, False, False, True,  True,  False, False,
+    [<--fatal>],   [], False, False, False, False, False, True,  False, False,
+    [<-q>],        [], False, False, False, False, False, False, False, False,
+    [<--silent>],  [], False, False, False, False, False, False, False, False,
+    [<--logcolor>],[], False, False, False, True, True,   True,  True,  False,
+
+    [<--logthreadid -v>], [],
+                       False, False, True,  True, True,   True,  False, True,
 
     # Don't mess with arguments that aren't mine
     [<foo -q bar mine --this --that>], [<foo bar mine --this --that>],
-                       False, False, False, False, False, False, False,
+                       False, False, False, False, False, False, False, False,
 ;
 
-plan @testcases.elems / 9;
+plan @testcases.elems / 10;
 
 for @testcases -> @args, @keepargs,
-                  $trace, $debug, $info, $warning, $error, $fatal, $color {
+                  $trace, $debug, $info, $warning, $error, $fatal,
+                  $color, $thread {
     subtest @args.Str, {
-        plan 8;
+        plan 9;
 
         my $lib = $*PROGRAM.parent.parent.child('lib');
         my $perl6 = ~$*EXECUTABLE;
@@ -78,5 +82,12 @@ for @testcases -> @args, @keepargs,
         } else {
             unlike $out, /\e\[\d\d\;1m/, 'Not Colorized';
         }
+
+        if $thread  {
+            like $out, /\(\d+\)/, 'Thread ID';
+        } else {
+            unlike $out, /\(\d+\)/, 'No Thread ID';
+        }
+
     }
 }
