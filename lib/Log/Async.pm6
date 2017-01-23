@@ -69,10 +69,12 @@ sub warning($msg) is export { logger.log( :$msg, :level(WARNING) ); }
 sub fatal($msg)   is export { logger.log( :$msg, :level(FATAL) ); }
 
 sub EXPORT {
-   set-logger(Log::Async.new) unless logger;
    return { }
 }
 
+INIT {
+    set-logger(Log::Async.new) unless logger;
+}
 END {
-    Log::Async.instance.done;
+    Log::Async.instance.done if Log::Async.instance;
 }
