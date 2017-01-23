@@ -1,0 +1,11 @@
+use v6;
+use Test;
+
+plan 3;
+
+use lib ~$*PROGRAM.parent.child('lib');
+
+use-ok 'one';
+use-ok 'two';
+
+ok 2, "didn't die";
