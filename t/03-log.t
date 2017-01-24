@@ -4,7 +4,7 @@ use Log::Async;
 
 plan 12;
 
-my $out;
+my $out = "";
 $*OUT = IO::Handle but role { method say($arg) { $out ~= $arg } };
 
 set-logger(Log::Async.new);

@@ -1,6 +1,6 @@
 enum Loglevels <<:TRACE(1) DEBUG INFO WARNING ERROR FATAL>>;
 
-class Log::Async:ver<0.0.1>:auth<github:bduggan> {
+class Log::Async:ver<0.0.2>:auth<github:bduggan> {
     has $.source = Supplier.new;
     has Tap @.taps;
     has Supply $.messages;

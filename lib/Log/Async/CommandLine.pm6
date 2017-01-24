@@ -2,7 +2,6 @@ unit module Log::Async::CommandLine;
 
 use Log::Async;
 
-
 sub parse-log-args {
     my @keepargs;
 
