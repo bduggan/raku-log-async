@@ -42,6 +42,11 @@ class Log::Async:ver<0.0.2>:auth<github:bduggan> {
         self.send-to($fh, |args);
     }
 
+    multi method send-to(IO::Path $path, |args) {
+        my $fh = $path.open(:a) or die "error opening $path";
+        self.send-to($fh, |args);
+    }
+
     method log(:$msg, Loglevels :$level, :$when = DateTime.now) {
         my $m = { :$msg, :$level, :$when, :$*THREAD };
         (start $.source.emit($m))

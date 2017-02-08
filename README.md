@@ -83,6 +83,7 @@ the level and msg keys respectively.
 **send-to(Str $filename, |args)**
 ```p6
 send-to(IO::Handle $handle)
+send-to(IO::Path $path)
 logger.send-to('/tmp/out.log');
 ```
 Add a tap that prints timestamp, level and message to a file or filehandle.
