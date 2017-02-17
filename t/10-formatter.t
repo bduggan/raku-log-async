@@ -1,0 +1,79 @@
+use v6;
+use Test;
+use lib 'lib';
+use Log::Async;
+
+plan 5;
+
+sub tempfile {
+  return $*TMPDIR.child("log-async-{ now.Rat }-{ $*PID }" );
+}
+
+my regex zone {
+ [ '-' \d+ ':' \d+ | 'Z' ]
+}
+my regex date {
+   \d+ '-' \d+ '-' \d+ 'T' \d+ ':' \d+ ':' \d+ '.' \d+ <zone>
+}
+
+{
+  logger.close-taps;
+  my $output will leave { .unlink } = tempfile;
+  logger.send-to($output);
+  info "this is some interesting info";
+  logger.done;
+  my $lines = $output.slurp;
+  like $lines, / <date> ' (' \d+ ') info: this is some interesting info' /,
+                'default format';
+}
+
+{
+  Log::Async.set-instance(Log::Async.new);
+  logger.close-taps;
+  my $output will leave { .unlink } = tempfile;
+  logger.send-to($output);
+  info "this is some more interesting info";
+  logger.done;
+  my $lines = $output.slurp;
+  like $lines, / <date> ' (' \d+ ') info: this is some more interesting info' /,
+                'default format again';
+}
+
+{
+  Log::Async.set-instance(Log::Async.new);
+  logger.close-taps;
+  my $output will leave { .unlink } = tempfile;
+  logger.send-to($output, formatter => -> $m, :$fh { $fh.say: "this is my own format" });
+  info "this will not be printed";
+  logger.done;
+  my $lines = $output.slurp;
+  is $lines, "this is my own format\n", "custom format";
+}
+
+{
+  Log::Async.set-instance(Log::Async.new);
+  logger.close-taps;
+  my $output will leave { .unlink } = tempfile;
+  logger.send-to($output, formatter => -> $m, :$fh { $fh.say: "{$m<level>.lc}: $m<msg>" });
+  trace "tracing paper";
+  debug "this is not a bug";
+  warning "this is your final warning";
+  logger.done;
+  my @lines = $output.slurp.lines;
+  is-deeply @lines, ["trace: tracing paper",
+                     "debug: this is not a bug",
+                     "warning: this is your final warning"], "custom format again";
+}
+
+{
+  Log::Async.set-instance(Log::Async.new);
+  logger.close-taps;
+  my $output will leave { .unlink } = tempfile;
+  logger.send-to($output, :level(DEBUG), formatter => -> $m, :$fh { $fh.say: "{$m<level>.lc}: $m<msg>" });
+  trace "tracing paper";
+  debug "this is not a bug";
+  warning "this is your final warning";
+  logger.done;
+  my @lines = $output.slurp.lines;
+  is-deeply @lines, [ "debug: this is not a bug" ], "custom format with filter";
+}

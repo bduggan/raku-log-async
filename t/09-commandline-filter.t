@@ -1,0 +1,24 @@
+use v6;
+use Test;
+
+plan 6;
+
+my $lib = $*PROGRAM.parent.parent.child('lib');
+my $t = $*PROGRAM.parent;
+my $perl6 = ~$*EXECUTABLE;
+
+sub run-test(*@args) {
+    run($perl6, "-I$lib,$t", 't/command-line-test.pl',
+        |@args, :out).out.slurp-rest;
+}
+
+my $out = run-test(<--testsubs>);
+ 
+unlike $out, /:s trace\: sub_a/, 'Sub No trace';
+unlike $out, /:s debug\: sub_a/, 'Sub No debug';
+unlike $out, /:s info\: sub_a/, 'Sub No info';
+like $out, /:s warning\: sub_a/, 'Sub Warning';
+like $out, /:s error\: sub_a/, 'Sub Error';
+like $out, /:s fatal\: sub_a/, 'Sub Fatal';
+
+

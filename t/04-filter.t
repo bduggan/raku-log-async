@@ -1,5 +1,6 @@
 use v6;
 use Test;
+use lib 'lib';
 use Log::Async;
 
 plan 8;
