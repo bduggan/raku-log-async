@@ -116,6 +116,13 @@ logger.close-taps
 ```
 Close all the taps.
 
+**done**
+```p6
+logger.done
+```
+Tell the supplier it is done, then wait for the supply to be done.
+This is automatically called in the END phase.
+
 Context
 =======
 To display stack trace information, logging can be initialized with `add-context`.
