@@ -140,7 +140,7 @@ logger.send-to('/var/log/trace.out',
 
 A custom context object can be used as an argument to add-context.  This
 object should have a `generate` method. `generate` will be called to
-generate context whenenever a logging is invoked.
+generate context whenever a logging is invoked.
 
 For instance:
 ```p6
@@ -184,8 +184,16 @@ trace 'hi';
 
 Caveats
 =======
-Because messages are emitted asychronously, the order in which
+Because messages are emitted asynchronously, the order in which
 they are emitted depends on the scheduler.  Taps are executed
 in the same order in which they are emitted.  Therefore timestamps
 in the log might not be in chronological order.
 
+Author
+======
+Brian Duggan
+
+Contributors
+============
+Curt Tilmes
+Marcel Timmerman
