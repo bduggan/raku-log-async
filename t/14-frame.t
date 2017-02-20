@@ -31,6 +31,7 @@ Foo.bar();
 trace "world";
 
 logger.done;
+@all .= sort;
 
 is @all[0], "t/14-frame.t 17 foo: hello", 'right frame output in sub';
 is @all[1], "t/14-frame.t 18 foo: hello 1", 'right frame output in sub';
