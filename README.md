@@ -140,7 +140,7 @@ logger.send-to('/var/log/trace.out',
 
 A custom context object can be used as an argument to add-context.  This
 object should have a `generate` method. `generate` will be called to
-generate context whenever a logging is invoked.
+generate context whenever a log message is sent.
 
 For instance:
 ```p6
