@@ -8,6 +8,10 @@
         "Log::Async::CommandLine" : "lib/Log/Async/CommandLine.pm6",
         "Log::Async::Context" : "lib/Log/Async/Context.pm6"
     },
+    "tags" : [
+            "log", "logging", "logger",
+            "async", "asynchronous"
+        ],
     "depends" : [
     ],
     "description" : "Asynchronous logging with supplies and taps",
