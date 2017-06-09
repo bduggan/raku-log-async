@@ -10,7 +10,7 @@ sub tempfile {
 }
 
 my regex zone {
- [ '-' \d+ ':' \d+ | 'Z' ]
+ [ <[+-]> \d+ ':' \d+ | 'Z' ]
 }
 my regex date {
    \d+ '-' \d+ '-' \d+ 'T' \d+ ':' \d+ ':' \d+ '.' \d+ <zone>
