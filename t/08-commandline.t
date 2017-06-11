@@ -35,7 +35,7 @@ for @testcases -> @args, @keepargs,
         my $t = $*PROGRAM.parent.parent.child('t');
         my $perl6 = ~$*EXECUTABLE;
 
-        my $out = run($perl6,"-I$lib,$t", 't/command-line-test.pl',
+        my $out = run($perl6,"-I$lib,$t", ~$t.child('command-line-test.pl'),
                       |@args, :out).out.slurp-rest;
 
         like $out, (@keepargs.elems

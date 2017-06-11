@@ -19,12 +19,6 @@ class Log::Async:ver<0.0.3>:auth<github:bduggan> {
       $.contextualizer = $context;
     }
 
-    method new {
-        my $self = callsame;
-        $self.send-to($*OUT);
-        $self;
-    }
-
     method close-taps {
         .close for @.taps;
     }

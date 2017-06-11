@@ -8,7 +8,7 @@ my $t = $*PROGRAM.parent;
 my $perl6 = ~$*EXECUTABLE;
 
 sub run-test(*@args) {
-    run($perl6, "-I$lib,$t", 't/command-line-test.pl',
+    run($perl6, "-I$lib,$t", $t.child('command-line-test.pl'),
         |@args, :out).out.slurp-rest;
 }
 
