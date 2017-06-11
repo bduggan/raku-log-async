@@ -9,6 +9,7 @@ my $out = "";
 $*OUT = IO::Handle but role { method say($arg) { $out ~= $arg } };
 
 set-logger(Log::Async.new);
+logger.send-to($*OUT);
 
 trace "albatross";
 sleep 0.1;
