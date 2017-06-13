@@ -5,7 +5,6 @@ use Log::Async;
 
 plan 8;
 
-logger.close-taps;
 my $last = "my";
 logger.add-tap({ $last = $^message<msg> }, :level(TRACE));
 

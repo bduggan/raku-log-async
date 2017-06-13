@@ -7,7 +7,6 @@ plan 1;
 
 my @lines;
 my $out = IO::Handle but role { method say($arg) { @lines.push: $arg } };
-logger.close-taps;
 logger.add-context;
 logger.send-to($out,
   formatter => -> $m, :$fh {

@@ -4,7 +4,7 @@ use lib 'lib';
 use Log::Async;
 plan 6;          # NB: line numbers are hard coded below, modify with care
 
-logger.close-taps;
+
 my @all;
 my $out = IO::Handle but role { method say($str) { @all.push: $str } };
 

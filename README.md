@@ -165,19 +165,17 @@ logger.add-tap(-> $m { say $m.ctx.custom-method } )
 
 More Examples
 ========
-Close all taps and just send debug messages to stdout.
+Send debug messages to stdout.
 ```p6
-logger.close-taps;
 logger.send-to($*OUT,:level(DEBUG));
 ```
 
-Close all taps and send warnings, errors, and fatals to a log file.
+Send warnings, errors, and fatals to a log file.
 ```p6
-logger.close-taps;
 logger.send-to('/var/log/error.log',:level(* >= WARNING));
 ```
 
-Close all taps, and add one that prints the file, line number, message, and utc timestamp.
+Add a tap that prints the file, line number, message, and utc timestamp.
 ```p6
 logger.send-to($*OUT,
   formatter => -> $m, :$fh {

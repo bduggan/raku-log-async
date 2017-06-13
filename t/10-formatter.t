@@ -17,7 +17,6 @@ my regex date {
 }
 
 {
-  logger.close-taps;
   my $output will leave { .unlink } = tempfile;
   logger.send-to($output);
   info "this is some interesting info";
@@ -25,11 +24,11 @@ my regex date {
   my $lines = $output.slurp;
   like $lines, / <date> ' (' \d+ ') info: this is some interesting info' /,
                 'default format';
+  logger.close-taps;
 }
 
 {
   Log::Async.set-instance(Log::Async.new);
-  logger.close-taps;
   my $output will leave { .unlink } = tempfile;
   logger.send-to($output);
   info "this is some more interesting info";
@@ -37,22 +36,22 @@ my regex date {
   my $lines = $output.slurp;
   like $lines, / <date> ' (' \d+ ') info: this is some more interesting info' /,
                 'default format again';
+  logger.close-taps;
 }
 
 {
   Log::Async.set-instance(Log::Async.new);
-  logger.close-taps;
   my $output will leave { .unlink } = tempfile;
   logger.send-to($output, formatter => -> $m, :$fh { $fh.say: "this is my own format" });
   info "this will not be printed";
   logger.done;
   my $lines = $output.slurp;
   is $lines, "this is my own format\n", "custom format";
+  logger.close-taps;
 }
 
 {
   Log::Async.set-instance(Log::Async.new);
-  logger.close-taps;
   my $output will leave { .unlink } = tempfile;
   logger.send-to($output, formatter => -> $m, :$fh { $fh.say: "{$m<level>.lc}: $m<msg>" });
   trace "tracing paper";
@@ -63,11 +62,11 @@ my regex date {
   is-deeply @lines, ["trace: tracing paper",
                      "debug: this is not a bug",
                      "warning: this is your final warning"], "custom format again";
+  logger.close-taps;
 }
 
 {
   Log::Async.set-instance(Log::Async.new);
-  logger.close-taps;
   my $output will leave { .unlink } = tempfile;
   logger.send-to($output, :level(DEBUG), formatter => -> $m, :$fh { $fh.say: "{$m<level>.lc}: $m<msg>" });
   trace "tracing paper";

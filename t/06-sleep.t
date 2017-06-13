@@ -5,8 +5,6 @@ use Log::Async;
 
 plan 2;
 
-logger.close-taps;
-
 my $message;
 logger.add-tap({ sleep 1; $message = $^m<msg> });
 

@@ -7,8 +7,6 @@ plan 3;
 
 my $when = now + 1;
 
-logger.close-taps;
-
 my @messages;
 logger.add-tap({ push @messages, $^message });
 

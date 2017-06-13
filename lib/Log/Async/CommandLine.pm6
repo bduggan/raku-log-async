@@ -14,6 +14,7 @@ sub parse-log-args {
     for @*ARGS {
         when '--silent'|'-q' {
             $silent = True;
+            logger.untapped-ok = True;
         }
         when '-v' {
             $loglevel = INFO;
@@ -57,7 +58,6 @@ sub parse-log-args {
                         "$m<level>.lc(): $m<msg>");
          };
 
-    logger.close-taps;
     logger.add-tap(-> $m { &print-log($logfh, $m, $threadid) },
                    :level(* >= $loglevel))
         unless $silent;
