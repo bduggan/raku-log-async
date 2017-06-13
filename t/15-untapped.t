@@ -1,0 +1,12 @@
+use v6;
+use Test;
+use lib 'lib';
+
+plan 2;
+
+use Log::Async;
+
+ok logger.untapped-ok == False, 'untapped-ok set to false';
+logger.untapped-ok = True;
+ok logger.untapped-ok, 'set to true';
+

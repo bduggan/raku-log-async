@@ -124,6 +124,13 @@ logger.done
 Tell the supplier it is done, then wait for the supply to be done.
 This is automatically called in the END phase.
 
+**untapped-ok**
+```p6
+logger.untapped-ok = True
+```
+This will suppress warnings about sending a log message before any
+taps are added.
+
 Context
 =======
 To display stack trace information, logging can be initialized with `add-context`.
