@@ -45,11 +45,14 @@ class Log::Async:ver<0.0.3>:auth<github:bduggan> {
             $fh.say: "{ $m<when> } ({$m<THREAD>.id}) { $m<level>.lc }: { $m<msg> }",
         }
         my $fmt = $formatter but role { method is-hidden-from-backtrace { True } };
-        self.add-tap: -> $m { $fmt($m,:$fh) }, |args
+        self.add-tap: -> $m {
+            $fmt($m,:$fh);
+            $fh.flush;
+        }, done => { $fh.close }, quit => { $fh.close }, |args
     }
 
     multi method send-to(Str $path, Code :$formatter, |args --> Tap) {
-        my $fh = open($path,:a) or die "error opening $path";
+        my $fh = open($path, :a, :!buffer) or die "error opening $path";
         self.send-to($fh, :$formatter, |args);
     }
 

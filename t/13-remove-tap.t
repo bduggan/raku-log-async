@@ -6,7 +6,7 @@ use Log::Async;
 plan 4;
 
 my @lines;
-my $out = IO::Handle but role { method say($arg) { @lines.push: $arg } };
+my $out = IO::Handle but role { method say($arg) { @lines.push: $arg }; method flush { } };
 
 my $one = logger.send-to($out, formatter => -> $m, :$fh { @lines.push: "one" } );
 my $two = logger.send-to($out, formatter => -> $m, :$fh { @lines.push: "two" } );
