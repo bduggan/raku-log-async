@@ -52,7 +52,7 @@ class Log::Async:ver<0.0.3>:auth<github:bduggan> {
     }
 
     multi method send-to(Str $path, Code :$formatter, |args --> Tap) {
-        my $fh = open($path, :a, :!buffer) or die "error opening $path";
+        my $fh = open($path, :a, :!out-buffer) or die "error opening $path";
         self.send-to($fh, :$formatter, |args);
     }
 
