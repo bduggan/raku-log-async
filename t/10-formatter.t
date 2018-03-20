@@ -59,9 +59,9 @@ my regex date {
   warning "this is your final warning";
   logger.done;
   my @lines = $output.slurp.lines;
-  is-deeply @lines, ["trace: tracing paper",
+  is-deeply @lines.sort, ["trace: tracing paper",
                      "debug: this is not a bug",
-                     "warning: this is your final warning"], "custom format again";
+                     "warning: this is your final warning"].sort, "custom format again";
   logger.close-taps;
 }
 
@@ -76,3 +76,5 @@ my regex date {
   my @lines = $output.slurp.lines;
   is-deeply @lines, [ "debug: this is not a bug" ], "custom format with filter";
 }
+
+# vim: ft=perl6

@@ -51,13 +51,13 @@ class Log::Async:ver<0.0.6>:auth<github:bduggan> {
         }, done => { $fh.close }, quit => { $fh.close }, |args
     }
 
-    multi method send-to(Str $path, Code :$formatter, |args --> Tap) {
-        my $fh = open($path, :a, :!out-buffer) or die "error opening $path";
+    multi method send-to(Str $path, Code :$formatter, Bool :$out-buffer = False, |args --> Tap) {
+        my $fh = open($path,:a,:$out-buffer) or die "error opening $path";
         self.send-to($fh, :$formatter, |args);
     }
 
-    multi method send-to(IO::Path $path, Code :$formatter,  |args --> Tap) {
-        my $fh = $path.open(:a) or die "error opening $path";
+    multi method send-to(IO::Path $path, Code :$formatter, Bool :$out-buffer = False, |args --> Tap) {
+        my $fh = $path.open(:a,:$out-buffer) or die "error opening $path";
         self.send-to($fh, :$formatter, |args);
     }
 
