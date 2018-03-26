@@ -6,7 +6,7 @@ use Log::Async;
 plan 2;
 
 my $out = "";
-$*OUT = IO::Handle but role { method say($arg) { $out ~= $arg } };
+$*OUT = $*OUT but role { method say($arg) { $out ~= $arg } };
 set-logger(Log::Async.new);
 logger.send-to($*OUT);
 
