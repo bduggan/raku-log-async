@@ -6,7 +6,7 @@ use Log::Async;
 plan 1;
 
 my @lines;
-my $out = IO::Handle but role { method say($arg) { @lines.push: $arg } };
+my $out = $*OUT but role { method say($arg) { @lines.push: $arg } };
 logger.add-context;
 logger.send-to($out,
   formatter => -> $m, :$fh {
@@ -21,3 +21,4 @@ logger.done;
 my $file = $?FILE.subst(/^^ "{ $*CWD }/" /,'');
 is-deeply @lines, [ "file $file, line $line, message $msg" ], "Got context";
 
+# vim: syn=perl6

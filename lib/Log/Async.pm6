@@ -40,7 +40,7 @@ class Log::Async:ver<0.0.6>:auth<github:bduggan> {
       @.taps.splice($i,1,());
     }
 
-    multi method send-to( IO::Handle $fh, Code :$formatter is copy, |args --> Tap) {
+    multi method send-to( IO::Handle:D $fh, Code :$formatter is copy, |args --> Tap) {
         $formatter //= -> $m, :$fh {
             $fh.say: "{ $m<when> } ({$m<THREAD>.id}) { $m<level>.lc }: { $m<msg> }",
         }

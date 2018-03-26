@@ -6,7 +6,7 @@ plan 6;          # NB: line numbers are hard coded below, modify with care
 
 
 my @all;
-my $out = IO::Handle but role { method say($str) { @all.push: $str }; method flush { } };
+my $out = $*OUT but role { method say($str) { @all.push: $str }; method flush { } };
 
 logger.send-to($out,
   formatter => -> $m, :$fh {
