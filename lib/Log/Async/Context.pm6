@@ -8,11 +8,10 @@ has $.line;
 method generate is hidden-from-backtrace {
   my $exception = Exception.new;
   try $exception.throw;
-  my @exclude = ( $?FILE, $?FILE.IO.parent.parent.child('Async.pm6') ~ " (Log::Async)" );
   if ($!) {
     @!backtrace = $exception.backtrace.grep({ !.is-hidden and !.is-setting });
     @!backtrace.shift; # remove exception creation
-    @!backtrace.shift while @!backtrace[0].file eq @exclude.any;
+    @!backtrace.shift while @!backtrace[0].file.Str.contains( 'Log/Async' );
   } else {
     die "error throwing exception";
   }
