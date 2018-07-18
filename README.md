@@ -53,7 +53,7 @@ Exports
 **trace, debug, info, warning, error, fatal**: each of these
 asynchronously emits a message at that level.
 
-**enum LogLevels**: TRACE DEBUG INFO WARNING ERROR FATAL
+**enum Loglevels**: TRACE DEBUG INFO WARNING ERROR FATAL
 
 **class Log::Async**: Does the real work.
 
@@ -68,7 +68,7 @@ Log::Async Methods
 ```p6
 my $tap = logger.add-tap({ say $^m<msg> ~ '!!!!!' },  :level(FATAL));
 logger.add-tap({ $*ERR.say $^m<msg> },      :level(DEBUG | ERROR));
-logger.add-tap({ say "# $^m<msg>",          :level(* < ERROR) });
+logger.add-tap({ say "# $^m<msg>"},          :level(* < ERROR) );
 logger.add-tap({ say "meow: " ~ $^m<msg> }, :msg(rx/cat/));
 logger.add-tap(-> $m { say "thread { $m<THREAD>.id } says $m<msg>" });
 logger.add-tap(-> $m { say "$m<when> {$m<frame>.file} {$m<frame>.line} $m<level>: $m<msg>" });
@@ -78,7 +78,7 @@ logger.add-tap(-> $m { say "{ $m<when>.utc } ($m<level>) $m<msg>",
 
 Add a tap, optionally filtering by the level or by the message.
 `$code` receives a hash with the keys `msg` (a string), `level` (a
-LogLevel), `when` (a DateTime), `THREAD` (the caller's $\*THREAD),
+Loglevel), `when` (a DateTime), `THREAD` (the caller's $\*THREAD),
 `frame` (the current callframe), and possibly `ctx` (the context, see below).
 
 `$level` and `$msg` are filters: they will be smartmatched against
