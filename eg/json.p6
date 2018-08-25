@@ -4,7 +4,8 @@ use Log::Async;
 use JSON::Fast;
 
 sub json-formatter ( $m, :$fh ) {
-    $fh.say: to-json $m;
+    $fh.say: to-json
+        $m<level msg when>:kv.Hash
 }
 
 logger.send-to($*OUT, formatter => &json-formatter );
