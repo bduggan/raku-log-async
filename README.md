@@ -64,7 +64,7 @@ asynchronously emits a message at that level.
 Log::Async Methods
 ==========
 
-**add-tap(Code $code,:$level,:$msg)**
+### add-tap(Code $code,:$level,:$msg)
 ```p6
 my $tap = logger.add-tap({ say $^m<msg> ~ '!!!!!' },  :level(FATAL));
 logger.add-tap({ $*ERR.say $^m<msg> },      :level(DEBUG | ERROR));
@@ -87,13 +87,14 @@ the level and msg keys respectively.
 `add-tap` returns a tap, which can be sent to `remove-tap` to turn
 it off.
 
-  remove-tap($tap)
+###  remove-tap($tap)
+
 ```p6
 logger.remove-tap($tap)
 ```
 Closes and removes a tap.
 
-**send-to(Str $filename, Code :$formatter, |args)**
+### send-to(Str $filename, Code :$formatter, |args)
 ```p6
 send-to(IO::Handle $handle)
 send-to(IO::Path $path)
@@ -111,20 +112,20 @@ the named argument `:$fh` -- an open filehandle for the destination.
 
 Additional args (filters) are sent to add-tap.
 
-**close-taps**
+### close-taps
 ```p6
 logger.close-taps
 ```
 Close all the taps.
 
-**done**
+### done
 ```p6
 logger.done
 ```
 Tell the supplier it is done, then wait for the supply to be done.
 This is automatically called in the END phase.
 
-**untapped-ok**
+### untapped-ok
 ```p6
 logger.untapped-ok = True
 ```
@@ -172,17 +173,21 @@ logger.add-tap(-> $m { say $m.ctx.custom-method } )
 
 More Examples
 ========
-Send debug messages to stdout.
+
+
+### Send debug messages to stdout.
 ```p6
 logger.send-to($*OUT,:level(DEBUG));
 ```
 
-Send warnings, errors, and fatals to a log file.
+### Send warnings, errors, and fatals to a log file.
+
 ```p6
 logger.send-to('/var/log/error.log',:level(* >= WARNING));
 ```
 
-Add a tap that prints the file, line number, message, and utc timestamp.
+### Add a tap that prints the file, line number, message, and utc timestamp.
+
 ```p6
 logger.send-to($*OUT,
   formatter => -> $m, :$fh {
