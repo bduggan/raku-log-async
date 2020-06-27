@@ -9,8 +9,8 @@ my $out;
 my $out-channel = Channel.new;
 sub wait-for-out {
     react {
-        whenever $out-channel  { $out = $_;  done }
-        whenever Promise.in(3) { $out = Nil; done }
+        whenever $out-channel   { $out = $_;  done }
+        whenever Promise.in(20) { $out = Nil; done }
     }
 }
 $*OUT = $*OUT but role { method say($arg) { $out-channel.send: $arg } };
