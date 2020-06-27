@@ -5,40 +5,45 @@ use Log::Async;
 
 plan 12;
 
-my $out = "";
-$*OUT = $*OUT but role { method say($arg) { $out ~= $arg } };
+my $out;
+my $out-channel = Channel.new;
+sub wait-for-out {
+    react {
+        whenever $out-channel  { $out = $_;  done }
+        whenever Promise.in(3) { $out = Nil; done }
+    }
+}
+$*OUT = $*OUT but role { method say($arg) { $out-channel.send: $arg } };
 
 set-logger(Log::Async.new);
 logger.send-to($*OUT);
 
 trace "albatross";
-sleep 0.1;
+wait-for-out;
 like $out, /albatross/, 'found message';
 like $out, /trace/, 'found level';
 
 debug "soup";
-sleep 0.1;
+wait-for-out;
 like $out, /soup/, 'found message';
 like $out, /debug/, 'found level';
 
 info "logic";
-sleep 0.1;
+wait-for-out;
 like $out, /logic/, 'found message';
 like $out, /info/, 'found level';
 
 warning "problem";
-sleep 0.1;
+wait-for-out;
 like $out, /problem/, 'found message';
 like $out, /warning/, 'found level';
 
 error "danger";
-sleep 0.1;
+wait-for-out;
 like $out, /danger/, 'found message';
 like $out, /error/, 'found level';
 
 fatal "will robinson";
-sleep 0.1;
+wait-for-out;
 like $out, /'will robinson'/, 'found message';
 like $out, /fatal/, 'found level';
-
-
