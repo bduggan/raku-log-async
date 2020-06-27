@@ -9,8 +9,8 @@ my $last = "my";
 my $last-channel = Channel.new;
 sub wait-for-out {
     react {
-        whenever $last-channel { $last = $_;  done }
-        whenever Promise.in(3) { $last = Nil; done }
+        whenever $last-channel  { $last = $_;  done }
+        whenever Promise.in(20) { $last = Nil; done }
     }
 }
 
@@ -55,7 +55,7 @@ sub wait-for-channel($channel) {
     gather react {
         my $count = 0;
         whenever $channel { take $_; done if ++$count == 3 }
-        whenever Promise.in(3) { done }
+        whenever Promise.in(20) { done }
     }
 }
 is (wait-for-channel $debug-or-error), <3 4 6>, 'filter with junction';
