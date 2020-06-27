@@ -3,47 +3,70 @@ use Test;
 use lib 'lib';
 use Log::Async;
 
-plan 8;
+plan 10;
 
 my $last = "my";
-logger.add-tap({ $last = $^message<msg> }, :level(TRACE));
+my $last-channel = Channel.new;
+sub wait-for-out {
+    react {
+        whenever $last-channel { $last = $_;  done }
+        whenever Promise.in(3) { $last = Nil; done }
+    }
+}
+
+logger.add-tap({ $last-channel.send: $^message<msg> }, :level(TRACE));
 
 trace "name";
-sleep 0.1;
+wait-for-out;
 is $last, 'name', 'got trace message';
 
 debug 'is';
-sleep 0.1;
-is $last, 'name', 'debug message not sent to trace log';
+trace "trace1";
+wait-for-out;
+is $last, 'trace1', 'debug message not sent to trace log';
 
 warning 'Inigo';
-sleep 0.1;
-is $last, 'name', 'warning message not sent to trace log';
+trace "trace2";
+wait-for-out;
+is $last, 'trace2', 'warning message not sent to trace log';
 
 error 'Montoya';
-sleep 0.1;
-is $last, 'name', 'error message not sent to trace log';
+trace "trace3";
+wait-for-out;
+is $last, 'trace3', 'error message not sent to trace log';
 
-my $debug-or-error;
-my $severe;
-my $not-severe;
-logger.add-tap({ $debug-or-error ~= $^m<msg> }, level => (DEBUG | ERROR) );
-logger.add-tap({ $severe ~= $^m<msg> }, :level(* >= ERROR) );
-logger.add-tap({ $not-severe ~= $^m<msg> }, :level(TRACE..INFO) );
+my $debug-or-error = Channel.new;
+my $severe = Channel.new;
+my $not-severe = Channel.new;
+logger.add-tap({ $debug-or-error.send: $^m<msg> }, level => (DEBUG | ERROR) );
+logger.add-tap({ $severe        .send: $^m<msg> }, :level(* >= ERROR) );
+logger.add-tap({ $not-severe    .send: $^m<msg> }, :level(TRACE..INFO) );
 info '1';
 trace '2';
 debug '3';
 error '4';
 fatal '5';
-sleep 0.1;
-is $debug-or-error.comb.sort.join, "34", 'filter with junction';
-is $severe.comb.sort.join, '45', 'filter with whatever';
-is $not-severe.comb.sort.join, '123', 'not severe';
+error '6';
 
-my $cat;
-logger.add-tap({ $cat = $^m<msg> }, :msg(rx/cat/));
-error 'cat alert';
+wait-for-out;
+is $last, '2', 'trace messages are still sent';
+
+sub wait-for-channel($channel) {
+    gather react {
+        my $count = 0;
+        whenever $channel { take $_; done if ++$count == 3 }
+        whenever Promise.in(3) { done }
+    }
+}
+is (wait-for-channel $debug-or-error), <3 4 6>, 'filter with junction';
+is (wait-for-channel $severe        ), <4 5 6>, 'filter with whatever';
+is (wait-for-channel $not-severe    ), <1 2 3>, 'not severe';
+
+logger.add-tap({ $last-channel.send: $^message<msg> }, :msg(rx/cat/));
+debug 'cat alert1';
 debug 'dog alog';
-sleep 0.1;
-is $cat, 'cat alert', 'filtered by msg';
-
+error 'cat alert2';
+wait-for-out;
+is $last, 'cat alert1', 'filtered by msg';
+wait-for-out;
+is $last, 'cat alert2', 'filtered by msg';
