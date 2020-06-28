@@ -1,7 +1,7 @@
 {
     "name" : "Log::Async",
     "source-url" : "git://github.com/bduggan/p6-log-async.git",
-    "perl" : "6.c",
+    "perl" : "6.*",
     "build-depends" : [ ],
     "provides" : {
         "Log::Async" : "lib/Log/Async.pm6",
@@ -16,7 +16,7 @@
     ],
     "description" : "Asynchronous logging with supplies and taps",
     "test-depends" : [ ],
-    "version" : "0.0.6",
+    "version" : "0.0.7",
     "license" : "Perl",
     "authors" : [
         "Brian Duggan"
