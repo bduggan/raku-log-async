@@ -17,7 +17,7 @@
     "description" : "Asynchronous logging with supplies and taps",
     "test-depends" : [ ],
     "version" : "0.0.7",
-    "license" : "Perl",
+    "license" : "Artistic-1.0-Perl",
     "authors" : [
         "Brian Duggan"
     ]
