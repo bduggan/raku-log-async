@@ -2,8 +2,6 @@ Log::Async
 ==========
 Thread-safe asynchronous logging using supplies.
 
-[![Build Status](https://travis-ci.org/bduggan/p6-log-async.svg)](https://travis-ci.org/bduggan/p6-log-async)
-
 Synopsis
 ========
 

@@ -1,6 +1,6 @@
 {
     "name" : "Log::Async",
-    "source-url" : "git://github.com/bduggan/p6-log-async.git",
+    "source-url" : "git://github.com/bduggan/raku-log-async.git",
     "perl" : "6.*",
     "build-depends" : [ ],
     "provides" : {

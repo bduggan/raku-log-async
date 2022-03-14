@@ -3,7 +3,7 @@
 =begin pod
 Run this from the upper directory using:
 
-    raku -Ilib eg/json.p6 | jq "."
+    raku -Ilib eg/json.raku | jq "."
 
 You don't need to have C<jq> installed; if you do, you'll get nicely formatted JSON output
 =end pod
