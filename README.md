@@ -7,7 +7,7 @@ Thread-safe asynchronous logging using supplies.
 Synopsis
 ========
 
-```p6
+```raku
 use Log::Async;
 logger.send-to($*OUT);
 
@@ -65,7 +65,7 @@ Log::Async Methods
 ==========
 
 ### add-tap(Code $code,:$level,:$msg)
-```p6
+```raku
 my $tap = logger.add-tap({ say $^m<msg> ~ '!!!!!' },  :level(FATAL));
 logger.add-tap({ $*ERR.say $^m<msg> },      :level(DEBUG | ERROR));
 logger.add-tap({ say "# $^m<msg>"},          :level(* < ERROR) );
@@ -89,13 +89,13 @@ it off.
 
 ###  remove-tap($tap)
 
-```p6
+```raku
 logger.remove-tap($tap)
 ```
 Closes and removes a tap.
 
 ### send-to(Str $filename, Code :$formatter, |args)
-```p6
+```raku
 send-to(IO::Handle $handle)
 send-to(IO::Path $path)
 logger.send-to('/tmp/out.log');
@@ -113,20 +113,20 @@ the named argument `:$fh` -- an open filehandle for the destination.
 Additional args (filters) are sent to add-tap.
 
 ### close-taps
-```p6
+```raku
 logger.close-taps
 ```
 Close all the taps.
 
 ### done
-```p6
+```raku
 logger.done
 ```
 Tell the supplier it is done, then wait for the supply to be done.
 This is automatically called in the END phase.
 
 ### untapped-ok
-```p6
+```raku
 logger.untapped-ok = True
 ```
 This will suppress warnings about sending a log message before any
@@ -139,7 +139,7 @@ This sends a stack trace with every log request (so may be expensive).  Once `ad
 has been called, a `ctx` element will be passed which is a `Log::Async::Context`
 object.  This has a `stack` method which returns an array of backtrace frames.
 
-```p6
+```raku
 logger.add-context;
 logger.send-to('/var/log/debug.out',
   formatter => -> $m, :$fh {
@@ -159,7 +159,7 @@ object should have a `generate` method. `generate` will be called to
 generate context whenever a log message is sent.
 
 For instance:
-```p6
+```raku
 my $context = Log::Async::Context.new but role {
   method generate { ... }
   method custom-method { ... }
@@ -176,19 +176,19 @@ More Examples
 
 
 ### Send debug messages to stdout.
-```p6
+```raku
 logger.send-to($*OUT,:level(DEBUG));
 ```
 
 ### Send warnings, errors, and fatals to a log file.
 
-```p6
+```raku
 logger.send-to('/var/log/error.log',:level(* >= WARNING));
 ```
 
 ### Add a tap that prints the file, line number, message, and utc timestamp.
 
-```p6
+```raku
 logger.send-to($*OUT,
   formatter => -> $m, :$fh {
     $fh.say: "{ $m<when>.utc } ({ $m<frame>.file } +{ $m<frame>.line }) $m<level> $m<msg>"
@@ -196,7 +196,7 @@ logger.send-to($*OUT,
 trace 'hi';
 
 # output:
-2017-02-20T14:00:00.961447Z (eg/out.p6 +10) TRACE hi
+2017-02-20T14:00:00.961447Z (eg/out.raku +10) TRACE hi
 ```
 
 
