@@ -52,11 +52,13 @@ wait-for-out;
 is $last, '2', 'trace messages are still sent';
 
 sub wait-for-channel($channel) {
-    gather react {
-        my $count = 0;
-        whenever $channel { take $_; done if ++$count == 3 }
-        whenever Promise.in(20) { done }
-    }
+  my @out;
+  react {
+    my $count = 0;
+    whenever $channel { @out.push: $_; done if ++$count == 3 }
+    whenever Promise.in(20) { done }
+  }
+  @out;
 }
 is (wait-for-channel $debug-or-error), <3 4 6>, 'filter with junction';
 is (wait-for-channel $severe        ), <4 5 6>, 'filter with whatever';
