@@ -4,9 +4,9 @@
     "perl" : "6.*",
     "build-depends" : [ ],
     "provides" : {
-        "Log::Async" : "lib/Log/Async.pm6",
-        "Log::Async::CommandLine" : "lib/Log/Async/CommandLine.pm6",
-        "Log::Async::Context" : "lib/Log/Async/Context.pm6"
+        "Log::Async" : "lib/Log/Async.rakumod",
+        "Log::Async::CommandLine" : "lib/Log/Async/CommandLine.rakumod",
+        "Log::Async::Context" : "lib/Log/Async/Context.rakumod"
     },
     "tags" : [
             "log", "logging", "logger",

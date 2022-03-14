@@ -1,3 +1,3 @@
 test:
-	prove --exec='perl6 -Ilib' t/
+	prove --exec='raku -Ilib' t/
 
