@@ -5,6 +5,8 @@ use Log::Async;
 
 plan 1;
 
+exit skip-rest('coverage interferes with line numbers') if ?%*ENV<MVM_COVERAGE_LOG>; # interferes with line numbers
+
 my @lines;
 my $out = $*OUT but role { method say($arg) { @lines.push: $arg } };
 logger.add-context;

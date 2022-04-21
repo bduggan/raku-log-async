@@ -3,7 +3,7 @@ use Test;
 use lib 'lib';
 use Log::Async;
 plan 6;          # NB: line numbers are hard coded below, modify with care
-
+exit skip-rest('coverage interferes with line numbers') if ?%*ENV<MVM_COVERAGE_LOG>; # interferes with line numbers
 
 my @all;
 my $out = $*OUT but role { method say($str) { @all.push: $str }; method flush { } };
