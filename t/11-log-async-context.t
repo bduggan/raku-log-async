@@ -14,7 +14,7 @@ ok $ctx, 'contructor';
 
 like $ctx.file, / { $?FILE } $$/, "current file ($?FILE)";
 
-exit skip-rest('coverage interferes with line numbers') if ?%*ENV<MVM_COVERAGE_LOG>; # interferes with line numbers
+exit 0 & skip-rest('coverage interferes with line numbers') if ?%*ENV<MVM_COVERAGE_LOG>; # interferes with line numbers
 
 is $ctx.line, $line, "right line ($line)";
 
