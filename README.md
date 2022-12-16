@@ -2,6 +2,8 @@ Log::Async
 ==========
 Thread-safe asynchronous logging using supplies.
 
+[![SparrowCI](https://ci.sparrowhub.io/project/gh-bduggan-raku-log-async/badge)](https://ci.sparrowhub.io)
+
 Synopsis
 ========
 
