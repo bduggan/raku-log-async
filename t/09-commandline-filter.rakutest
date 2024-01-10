@@ -4,10 +4,10 @@ plan 6;
 
 my $lib = $*PROGRAM.parent.parent.child('lib');
 my $t = $*PROGRAM.parent;
-my $perl6 = ~$*EXECUTABLE;
+my $raku = ~$*EXECUTABLE;
 
 sub run-test(*@args) {
-    run($perl6, "-I$lib,$t", $t.child('command-line-test.pl'),
+    run($raku, "-I$lib,$t", $t.child('command-line-test.pl'),
         |@args, :out).out.slurp-rest;
 }
 

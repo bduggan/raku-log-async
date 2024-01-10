@@ -76,4 +76,3 @@ my regex date {
   is-deeply @lines, [ "debug: this is not a bug" ], "custom format with filter";
 }
 
-# vim: ft=perl6

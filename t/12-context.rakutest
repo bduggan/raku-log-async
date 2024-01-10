@@ -21,5 +21,3 @@ logger.done;
 
 my $file = $?FILE.subst(/^^ "{ $*CWD }/" /,'');
 is-deeply @lines, [ "file $file, line $line, message $msg" ], "Got context";
-
-# vim: syn=perl6

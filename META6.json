@@ -1,7 +1,7 @@
 {
     "name" : "Log::Async",
     "source-url" : "git://github.com/bduggan/raku-log-async.git",
-    "perl" : "6.*",
+    "raku" : "6.*",
     "build-depends" : [ ],
     "provides" : {
         "Log::Async" : "lib/Log/Async.rakumod",
