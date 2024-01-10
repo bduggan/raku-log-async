@@ -1,5 +1,3 @@
-use v6;
-
 use Log::Async;
 use Log::Async::CommandLine;
 use TestModule;

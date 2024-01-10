@@ -7,7 +7,7 @@ my $t = $*PROGRAM.parent;
 my $raku = ~$*EXECUTABLE;
 
 sub run-test(*@args) {
-    run($raku, "-I$lib,$t", $t.child('command-line-test.pl'),
+    run($raku, "-I$lib,$t", $t.child('command-line-test.raku'),
         |@args, :out).out.slurp-rest;
 }
 
