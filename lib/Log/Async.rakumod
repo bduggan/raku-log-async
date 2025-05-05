@@ -84,22 +84,28 @@ class Log::Async:ver<0.0.7>:auth<github:bduggan> {
     }
 }
 
-sub set-logger($new) is export {
+sub set-logger($new) is export(:MANDATORY) {
     Log::Async.set-instance($new);
 }
-sub logger is export {
+sub logger is export(:MANDATORY) {
     Log::Async.instance;
 }
 
-sub trace($msg)   is export is hidden-from-backtrace { logger.log( :$msg :level(TRACE)  :frame(callframe(1))) }
-sub debug($msg)   is export is hidden-from-backtrace { logger.log( :$msg :level(DEBUG)  :frame(callframe(1))) }
-sub info($msg)    is export is hidden-from-backtrace { logger.log( :$msg :level(INFO)   :frame(callframe(1))) }
-sub error($msg)   is export is hidden-from-backtrace { logger.log( :$msg :level(ERROR)  :frame(callframe(1))) }
-sub warning($msg) is export is hidden-from-backtrace { logger.log( :$msg :level(WARNING):frame(callframe(1))) }
-sub fatal($msg)   is export is hidden-from-backtrace { logger.log( :$msg :level(FATAL)  :frame(callframe(1))) }
+sub trace($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(TRACE)  :frame(callframe(1))) }
+sub debug($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(DEBUG)  :frame(callframe(1))) }
+sub info($msg)    is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(INFO)   :frame(callframe(1))) }
+sub error($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(ERROR)  :frame(callframe(1))) }
+sub warning($msg) is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(WARNING):frame(callframe(1))) }
+sub fatal($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(FATAL)  :frame(callframe(1))) }
 
-sub EXPORT {
-   return { }
+sub EXPORT($arg = Nil, $arg2 = Nil) {
+  given $arg {
+    when 'all' | 'trace' { logger.send-to: $*ERR }
+    when 'info' { logger.send-to: $*ERR, :level( * >= INFO ) }
+    when 'debug' { logger.send-to: $*ERR, :level( * >= DEBUG ) }
+    when 'warn' | 'warning' { logger.send-to: $*ERR, :level( * >= WARNING ) }
+  }
+  return { }
 }
 
 INIT {
