@@ -1,6 +1,7 @@
 enum Loglevels <<:TRACE(1) DEBUG INFO WARNING ERROR FATAL>>;
 
 use Log::Async::Context;
+use Terminal::ANSI::OO 't';
 
 class Log::Async:ver<0.0.7>:auth<github:bduggan> {
     has $.source = Supplier.new;
@@ -99,11 +100,36 @@ sub warning($msg) is export(:MANDATORY) is hidden-from-backtrace { logger.log( :
 sub fatal($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(FATAL)  :frame(callframe(1))) }
 
 sub EXPORT($arg = Nil, $arg2 = Nil) {
+  my $level;
+  my $to = $*ERR;
   given $arg {
-    when 'all' | 'trace' { logger.send-to: $*ERR }
-    when 'info' { logger.send-to: $*ERR, :level( * >= INFO ) }
-    when 'debug' { logger.send-to: $*ERR, :level( * >= DEBUG ) }
-    when 'warn' | 'warning' { logger.send-to: $*ERR, :level( * >= WARNING ) }
+    when 'info' { $level = ( * >= INFO ) }
+    when 'debug' { $level = ( * >= DEBUG ) }
+    when 'warn' | 'warning' { $level = ( * >= WARNING ) }
+  }
+  given $arg2 {
+    when 'color' {
+      my %colors =
+         # https://xkcd.com/color/rgb/
+         trace   => '#d8dcd6',  # light grey
+         debug   => '#ffff14',  # yellow
+         info    => '#d0fefe',  # pale blue
+         warning => '#f97306',  # Orange
+         error   => '#d9544d',  # Coral red
+         ;
+
+      sub color-formatter ( $m, :$fh ) {
+          $fh.say: t.color( %colors{$m<level>.lc} // '#ff0000' )
+          ~ $m<when>
+          ~ ' ' ~ ('[' ~ $m<level>.lc ~ ']').fmt('%-9s')
+          ~ (' (' ~ $*THREAD.id ~ ')').fmt('%2s')
+          ~ ' ' ~ $m<msg> ~ t.text-reset;
+      }
+      logger.send-to: $to, :$level, formatter => &color-formatter;
+    }
+    default {
+      logger.send-to: $to, :$level;
+    }
   }
   return { }
 }
