@@ -26,8 +26,9 @@ logger.send-to($*OUT);
 
 trace 'how';
 debug 'now';
-warning 'brown';
-info 'cow';
+info 'brown';
+warning 'cow';
+error 'wow';
 fatal 'ow';
 
 (start debug 'one')
