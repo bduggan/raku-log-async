@@ -1,0 +1,30 @@
+#!/usr/bin/env raku
+
+use Test;
+
+use lib 'lib';
+use Test;
+
+plan 5;
+
+{
+  use Log::Async;
+  ok logger, 'Logger instance is available';
+  nok logger.untapped-ok, 'Logger is configured without untapped-ok by default';
+}
+
+{
+  use Log::Async <trace>;
+  ok logger, 'Logger instance is available with trace level';
+}
+
+{
+  use Log::Async <color>;
+  ok logger, 'Logger instance is available with color formatting';
+}
+
+{
+  use Log::Async <all color>;
+  ok logger, 'Logger instance is available with color formatting and level all';
+}
+
