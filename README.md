@@ -3,6 +3,9 @@ Log::Async
 Thread-safe asynchronous logging using supplies.
 
 [![SparrowCI](https://ci.sparrowhub.io/project/gh-bduggan-raku-log-async/badge)](https://ci.sparrowhub.io)
+[![Actions Status](https://github.com/bduggan/raku-log-async/actions/workflows/linux.yml/badge.svg)](https://github.com/bduggan/raku-log-async/actions/workflows/linux.yml)
+[![Actions Status](https://github.com/bduggan/raku-log-async/actions/workflows/macos.yml/badge.svg)](https://github.com/bduggan/raku-log-async/actions/workflows/macos.yml)
+
 
 Synopsis
 ========
