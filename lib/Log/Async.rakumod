@@ -100,6 +100,7 @@ sub warning($msg) is export(:MANDATORY) is hidden-from-backtrace { logger.log( :
 sub fatal($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(FATAL)  :frame(callframe(1))) }
 
 sub EXPORT($arg = Nil, $arg2 = Nil) {
+  return { } unless $arg || $arg2;
   my $level;
   my $to = $*ERR;
   given $arg | $arg2 {
