@@ -53,7 +53,7 @@ Description
 ===========
 
 `Log::Async` provides asynchronous logging using
-the supply and tap semantics of Perl 6.  Log messages
+the supply and tap semantics of Raku.  Log messages
 are emitted asynchronously to a supply.  Taps are
 only executed by one thread at a time.
 
