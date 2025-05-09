@@ -102,20 +102,24 @@ sub fatal($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :
 sub EXPORT($arg = Nil, $arg2 = Nil) {
   my $level;
   my $to = $*ERR;
-  given $arg {
-    when 'info' { $level = ( * >= INFO ) }
+  given $arg | $arg2 {
+    when 'trace' { $level = ( * >= TRACE ) }
     when 'debug' { $level = ( * >= DEBUG ) }
+    when 'info' { $level = ( * >= INFO ) }
     when 'warn' | 'warning' { $level = ( * >= WARNING ) }
+    when 'error' { $level = ( * >= ERROR ) }
+    when 'fatal' { $level = ( * >= FATAL ) }
   }
-  given $arg2 {
-    when 'color' {
+  given $arg | $arg2 {
+    when 'color' | 'colour' {
       my %colors =
          # https://xkcd.com/color/rgb/
          trace   => '#d8dcd6',  # light grey
-         debug   => '#ffff14',  # yellow
-         info    => '#d0fefe',  # pale blue
+         debug   => '#d0fefe',  # pale blue
+         info    => '#ffff14',  # yellow
          warning => '#f97306',  # Orange
          error   => '#d9544d',  # Coral red
+         fatal   => '#ff0000',  # Red
          ;
 
       sub color-formatter ( $m, :$fh ) {
