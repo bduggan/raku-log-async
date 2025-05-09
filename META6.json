@@ -13,6 +13,7 @@
             "async", "asynchronous"
         ],
     "depends" : [
+      "Terminal::ANSI"
     ],
     "description" : "Asynchronous logging with supplies and taps",
     "test-depends" : [ ],
