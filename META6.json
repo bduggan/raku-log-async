@@ -19,6 +19,7 @@
     "test-depends" : [ ],
     "version" : "0.0.11",
     "license" : "Artistic-1.0-Perl",
+    "auth" : "zef:bduggan",
     "authors" : [
         "Brian Duggan"
     ]
