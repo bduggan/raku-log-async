@@ -116,8 +116,8 @@ sub EXPORT($arg = Nil, $arg2 = Nil) {
       my %colors =
          # https://xkcd.com/color/rgb/
          trace   => '#d8dcd6',  # light grey
-         debug   => '#d0fefe',  # pale blue
-         info    => '#ffff14',  # yellow
+         debug   => '#fac205',  # goldenrod
+         info    => '#dbb40c',  # gold
          warning => '#f97306',  # Orange
          error   => '#d9544d',  # Coral red
          fatal   => '#ff0000',  # Red
