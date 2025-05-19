@@ -1,7 +1,17 @@
 enum Loglevels <<:TRACE(1) DEBUG INFO WARNING ERROR FATAL>>;
 
 use Log::Async::Context;
+
 use Terminal::ANSI::OO 't';
+
+our %LOGCOLORS =
+    trace   => '#7bb274',  # Sage green
+    debug   => '#6b8ba4',  # Dusty blue
+    info    => '#cba560',  # Goldenrod
+    warning => '#ab6ca2',  # Wisteria
+    error   => '#d9544d',  # Coral red
+    fatal   => '#ff0000',  # Red
+;
 
 class Log::Async:ver<0.0.7>:auth<github:bduggan> {
     has $.source = Supplier.new;
@@ -99,42 +109,48 @@ sub error($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :
 sub warning($msg) is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(WARNING):frame(callframe(1))) }
 sub fatal($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :$msg :level(FATAL)  :frame(callframe(1))) }
 
-sub EXPORT($arg = Nil, $arg2 = Nil) {
+sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
   return { } unless $arg || $arg2;
-  my $level;
+  my $level = WARNING;
   my $to = $*ERR;
-  given $arg | $arg2 {
+  my @opts = ($arg, $arg2, $arg3).grep: *.defined;
+  my $formatter = -> $m, :$fh { $fh.say: "{ $m<when> } ({$m<THREAD>.id}) { $m<level>.lc }: { $m<msg> }" }
+  for @opts {
     when 'trace' { $level = ( * >= TRACE ) }
     when 'debug' { $level = ( * >= DEBUG ) }
     when 'info' { $level = ( * >= INFO ) }
     when 'warn' | 'warning' { $level = ( * >= WARNING ) }
     when 'error' { $level = ( * >= ERROR ) }
     when 'fatal' { $level = ( * >= FATAL ) }
-  }
-  given $arg | $arg2 {
     when 'color' | 'colour' {
-      my %colors =
-         # https://xkcd.com/color/rgb/
-         trace   => '#d8dcd6',  # light grey
-         debug   => '#fac205',  # goldenrod
-         info    => '#dbb40c',  # gold
-         warning => '#f97306',  # Orange
-         error   => '#d9544d',  # Coral red
-         fatal   => '#ff0000',  # Red
-         ;
+      my %colors = %LOGCOLORS;
 
-      sub color-formatter ( $m, :$fh ) {
+      $formatter = sub ( $m, :$fh ) {
           $fh.say: t.color( %colors{$m<level>.lc} // '#ff0000' )
           ~ $m<when>
           ~ ' ' ~ ('[' ~ $m<level>.lc ~ ']').fmt('%-9s')
           ~ (' (' ~ $*THREAD.id ~ ')').fmt('%2s')
           ~ ' ' ~ $m<msg> ~ t.text-reset;
       }
-      logger.send-to: $to, :$level, formatter => &color-formatter;
     }
-    default {
-      logger.send-to: $to, :$level;
+    when 'opt' {
+      my regex opt { 'trace' | 'debug' | 'info' | 'warn' | 'warning' | 'error' | 'fatal' }
+      if @*ARGS.grep( { / '--' 'log=' <opt> / } ) {
+        @*ARGS = @*ARGS.grep( { ! / '--' 'log=' <opt> / } );
+        $level = * ≥ Loglevels::{$<opt>.uc};
+      }
+      if @*ARGS.grep( '-v' ) {
+        @*ARGS = @*ARGS.grep( * ne '-v' );
+        $level = * ≥ Loglevels::INFO;
+      }
+      if @*ARGS.grep( '-d' ) {
+        @*ARGS = @*ARGS.grep( * ne '-d' );
+        $level = * ≥ Loglevels::DEBUG;
+      }
     }
+  }
+  if @opts.elems {
+     logger.send-to: $to, :$level, :$formatter;
   }
   return { }
 }
