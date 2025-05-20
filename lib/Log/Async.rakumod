@@ -152,7 +152,20 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
   if @opts.elems {
      logger.send-to: $to, :$level, :$formatter;
   }
-  return { }
+  return {
+    '&GENERATE-USAGE' => sub (&main,|args) {
+      my $orig = &*GENERATE-USAGE(&main, |args);
+      return $orig ~ q:to/ARGS/;
+
+
+      Additional arguments for logging:
+
+         --log=[trace|debug|info|warn|warning|error|fatal]
+          -v  # be verbose
+          -d  # show debug output
+      ARGS
+    }
+  }
 }
 
 INIT {
