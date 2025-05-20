@@ -111,6 +111,7 @@ sub fatal($msg)   is export(:MANDATORY) is hidden-from-backtrace { logger.log( :
 
 sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
   return { } unless $arg || $arg2;
+  my $using-args = False;
   my $level = WARNING;
   my $to = $*ERR;
   my @opts = ($arg, $arg2, $arg3).grep: *.defined;
@@ -134,6 +135,7 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
       }
     }
     when 'use-args' {
+      $using-args = True;
       my regex opt { 'trace' | 'debug' | 'info' | 'warn' | 'warning' | 'error' | 'fatal' }
       if @*ARGS.grep( { / '--' 'log=' <opt> / } ) {
         @*ARGS = @*ARGS.grep( { ! / '--' 'log=' <opt> / } );
@@ -152,6 +154,7 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
   if @opts.elems {
      logger.send-to: $to, :$level, :$formatter;
   }
+  return { } unless $using-args;
   return {
     '&GENERATE-USAGE' => sub (&main,|args) {
       my $orig = &*GENERATE-USAGE(&main, |args);
