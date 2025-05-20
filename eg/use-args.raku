@@ -1,6 +1,6 @@
 #!/usr/bin/env raku
 
-use Log::Async <opt color>;
+use Log::Async <use-args color>;
 
 info 'hi';
 debug 'there';

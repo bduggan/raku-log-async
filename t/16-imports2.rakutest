@@ -23,5 +23,5 @@ BEGIN {
 #nok $args<level>(DEBUG), 'level debug will not be logged';
 
 my @*ARGS = '--level=trace';
-use Log::Async "opt";
+use Log::Async "use-args";
 ok $args<level>(TRACE), 'trace will be logged';

@@ -133,7 +133,7 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
           ~ ' ' ~ $m<msg> ~ t.text-reset;
       }
     }
-    when 'opt' {
+    when 'use-args' {
       my regex opt { 'trace' | 'debug' | 'info' | 'warn' | 'warning' | 'error' | 'fatal' }
       if @*ARGS.grep( { / '--' 'log=' <opt> / } ) {
         @*ARGS = @*ARGS.grep( { ! / '--' 'log=' <opt> / } );
