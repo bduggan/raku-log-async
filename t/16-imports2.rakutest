@@ -1,0 +1,27 @@
+#!/usr/bin/env raku
+
+use Test;
+
+use lib 'lib';
+use Test;
+
+plan 1;
+
+my $args;
+
+BEGIN {
+  use Log::Async;
+
+  Log::Async.^find_method('add-tap').wrap: -> \s, |q {
+    $args = q;
+    callsame;
+  }
+}
+
+#use Log::Async <color info>;
+#ok $args<level>(INFO), 'level info will be logged';
+#nok $args<level>(DEBUG), 'level debug will not be logged';
+
+my @*ARGS = '--level=trace';
+use Log::Async "opt";
+ok $args<level>(TRACE), 'trace will be logged';

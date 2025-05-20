@@ -4,27 +4,20 @@ use Test;
 
 use lib 'lib';
 use Test;
+plan 2;
 
-plan 5;
+my $args;
 
-{
+BEGIN {
   use Log::Async;
-  ok logger, 'Logger instance is available';
-  nok logger.untapped-ok, 'Logger is configured without untapped-ok by default';
+
+  Log::Async.^find_method('add-tap').wrap: -> \s, |q {
+    $args = q;
+    callsame;
+  }
 }
 
-{
-  use Log::Async <trace>;
-  ok logger, 'Logger instance is available with trace level';
-}
-
-{
-  use Log::Async <color>;
-  ok logger, 'Logger instance is available with color formatting';
-}
-
-{
-  use Log::Async <all color>;
-  ok logger, 'Logger instance is available with color formatting and level all';
-}
+use Log::Async <color info>;
+ok $args<level>(INFO), 'level info will be logged';
+nok $args<level>(DEBUG), 'level debug will not be logged';
 
