@@ -16,6 +16,7 @@ This module can be used in a few different ways:
 use Log::Async <all>;           # send all logs to stderr
 use Log::Async <color>;         # in color
 use Log::Async <warning color>; # only send warning, error and fatal to stderr
+use Log::Async <opt>;           # parse -v, -d or --log=level from command line options
 ```
 
 Or don't import anything and set the destinations and levels to log yourself:
