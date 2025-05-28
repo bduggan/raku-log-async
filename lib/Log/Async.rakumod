@@ -137,16 +137,21 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
     when 'use-args' {
       $using-args = True;
       my regex opt { 'trace' | 'debug' | 'info' | 'warn' | 'warning' | 'error' | 'fatal' }
+      my regex filename { \S+ }
+      if @*ARGS.first( { / '--' 'logfile=' <filename> / }) -> $opt {
+        $opt ~~ /'--logfile=' (.*)/ and $to = ~$0;
+        @*ARGS .= grep: { ! / '--' 'logfile=' <filename> / };
+      }
       if @*ARGS.grep( { / '--' 'log=' <opt> / } ) {
         @*ARGS = @*ARGS.grep( { ! / '--' 'log=' <opt> / } );
         $level = * ≥ Loglevels::{$<opt>.uc};
       }
       if @*ARGS.grep( '-v' ) {
-        @*ARGS = @*ARGS.grep( * ne '-v' );
+        @*ARGS .= grep: * ne '-v';
         $level = * ≥ Loglevels::INFO;
       }
       if @*ARGS.grep( '-d' ) {
-        @*ARGS = @*ARGS.grep( * ne '-d' );
+        @*ARGS .= grep: * ne '-d';
         $level = * ≥ Loglevels::DEBUG;
       }
     }
@@ -166,6 +171,7 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
          --log=[trace|debug|info|warn|warning|error|fatal]
           -v  # be verbose
           -d  # show debug output
+         --logfile=filename # send logs to a file
       ARGS
     }
   }
