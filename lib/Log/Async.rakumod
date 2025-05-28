@@ -127,11 +127,12 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
       my %colors = %LOGCOLORS;
 
       $formatter = sub ( $m, :$fh ) {
-          $fh.say: t.color( %colors{$m<level>.lc} // '#ff0000' )
+          $fh.say: ($fh.t ?? t.color( %colors{$m<level>.lc} // '#ff0001' ) !! '' )
           ~ $m<when>
           ~ ' ' ~ ('[' ~ $m<level>.lc ~ ']').fmt('%-9s')
           ~ (' (' ~ $*THREAD.id ~ ')').fmt('%2s')
-          ~ ' ' ~ $m<msg> ~ t.text-reset;
+          ~ ' ' ~ $m<msg>
+          ~ ($fh.t ?? t.text-reset !! '' );
       }
     }
     when 'use-args' {
