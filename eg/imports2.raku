@@ -1,4 +1,4 @@
-use Log::Async <all color>;
+use Log::Async <trace color>;
 
 trace 'tracing';
 debug 'debugging';
