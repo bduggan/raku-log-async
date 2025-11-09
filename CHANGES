@@ -1,3 +1,7 @@
+0.0.15 2025-11-09
+  - make cli an alias for use-args
+  - better examples
+
 0.0.14 2025-09-18
   - fix documentation
   - only send color to ttys
