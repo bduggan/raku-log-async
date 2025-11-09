@@ -135,7 +135,7 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
           ~ ($fh.t ?? t.text-reset !! '' );
       }
     }
-    when 'use-args' {
+    when 'use-args' | 'cli' {
       $using-args = True;
       my regex opt { 'trace' | 'debug' | 'info' | 'warn' | 'warning' | 'error' | 'fatal' }
       my regex filename { \S+ }
