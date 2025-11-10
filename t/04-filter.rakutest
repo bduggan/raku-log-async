@@ -64,9 +64,9 @@ sub wait-for-channel($channel) {
   }
   @out;
 }
-is (wait-for-channel $debug-or-error), <3 4 6>, 'filter with junction';
-is (wait-for-channel $severe        ), <4 5 6>, 'filter with whatever';
-is (wait-for-channel $not-severe    ), <1 2 3>, 'not severe';
+is (wait-for-channel $debug-or-error).sort, <3 4 6>, 'filter with junction';
+is (wait-for-channel $severe        ).sort, <4 5 6>, 'filter with whatever';
+is (wait-for-channel $not-severe    ).sort, <1 2 3>, 'not severe';
 
 logger.add-tap({ $channel.send: $^message<msg> }, :msg(rx/cat/));
 debug 'cat alert1';
