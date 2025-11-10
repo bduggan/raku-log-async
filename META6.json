@@ -17,7 +17,7 @@
     ],
     "description" : "Asynchronous logging with supplies and taps",
     "test-depends" : [ ],
-    "version" : "0.0.15",
+    "version" : "0.0.16",
     "license" : "Artistic-1.0-Perl",
     "auth" : "zef:bduggan",
     "authors" : [
