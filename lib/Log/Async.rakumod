@@ -143,9 +143,11 @@ sub EXPORT($arg = Nil, $arg2 = Nil, $arg3 = Nil) {
         $opt ~~ /'--logfile=' (.*)/ and $to = ~$0;
         @*ARGS .= grep: { ! / '--' 'logfile=' <filename> / };
       }
-      if @*ARGS.grep( { / '--' 'log=' <opt> / } ) {
+      if @*ARGS.first( { / '--' 'log=' <opt> / } ) -> $log-arg {
+        $log-arg ~~ / '--' 'log=' <opt> /;
+        my $opt = ~$<opt>;
         @*ARGS = @*ARGS.grep( { ! / '--' 'log=' <opt> / } );
-        $level = * ≥ Loglevels::{$<opt>.uc};
+        $level = * ≥ Loglevels::{$opt.uc};
       }
       if @*ARGS.grep( '-v' ) {
         @*ARGS .= grep: * ne '-v';
