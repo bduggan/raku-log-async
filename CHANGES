@@ -1,3 +1,6 @@
+0.0.17 2026-03-09
+  - fix parsing of --log=XXX
+
 0.0.16 2025-11-10
   - flaky test
 
